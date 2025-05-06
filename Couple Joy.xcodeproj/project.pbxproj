@@ -6,6 +6,20 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		18109E9C2DCBE2B3003BB4F5 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18109E952DCBE2B3003BB4F5 /* ContentView.swift */; };
+		18109E9D2DCBE2B3003BB4F5 /* Couple_JoyApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18109E962DCBE2B3003BB4F5 /* Couple_JoyApp.swift */; };
+		18109E9E2DCBE2B3003BB4F5 /* CoupleJoyWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18109E972DCBE2B3003BB4F5 /* CoupleJoyWidget.swift */; };
+		18109E9F2DCBE2B3003BB4F5 /* WidgetProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18109E992DCBE2B3003BB4F5 /* WidgetProvider.swift */; };
+		18109EA02DCBE2B3003BB4F5 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18109E932DCBE2B3003BB4F5 /* AppDelegate.swift */; };
+		18E939052DCA73C000937F41 /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 18E939042DCA73C000937F41 /* FirebaseAuth */; };
+		18E939072DCA73C000937F41 /* FirebaseAuthCombine-Community in Frameworks */ = {isa = PBXBuildFile; productRef = 18E939062DCA73C000937F41 /* FirebaseAuthCombine-Community */; };
+		18E939092DCA73C000937F41 /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = 18E939082DCA73C000937F41 /* FirebaseFirestore */; };
+		18E9390B2DCA73C000937F41 /* FirebaseFirestoreCombine-Community in Frameworks */ = {isa = PBXBuildFile; productRef = 18E9390A2DCA73C000937F41 /* FirebaseFirestoreCombine-Community */; };
+		18E9390E2DCA8CB500937F41 /* GoogleSignIn in Frameworks */ = {isa = PBXBuildFile; productRef = 18E9390D2DCA8CB500937F41 /* GoogleSignIn */; };
+		18E939102DCA8CB500937F41 /* GoogleSignInSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 18E9390F2DCA8CB500937F41 /* GoogleSignInSwift */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXContainerItemProxy section */
 		18E938692DCA556C00937F41 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -24,6 +38,11 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		18109E932DCBE2B3003BB4F5 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		18109E952DCBE2B3003BB4F5 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		18109E962DCBE2B3003BB4F5 /* Couple_JoyApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Couple_JoyApp.swift; sourceTree = "<group>"; };
+		18109E972DCBE2B3003BB4F5 /* CoupleJoyWidget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoupleJoyWidget.swift; sourceTree = "<group>"; };
+		18109E992DCBE2B3003BB4F5 /* WidgetProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WidgetProvider.swift; sourceTree = "<group>"; };
 		18E9385B2DCA556B00937F41 /* Couple Joy.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Couple Joy.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		18E938682DCA556C00937F41 /* Couple JoyTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Couple JoyTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		18E938722DCA556C00937F41 /* Couple JoyUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Couple JoyUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -52,6 +71,12 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				18E9390E2DCA8CB500937F41 /* GoogleSignIn in Frameworks */,
+				18E939052DCA73C000937F41 /* FirebaseAuth in Frameworks */,
+				18E9390B2DCA73C000937F41 /* FirebaseFirestoreCombine-Community in Frameworks */,
+				18E939102DCA8CB500937F41 /* GoogleSignInSwift in Frameworks */,
+				18E939072DCA73C000937F41 /* FirebaseAuthCombine-Community in Frameworks */,
+				18E939092DCA73C000937F41 /* FirebaseFirestore in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -72,13 +97,34 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		18109EA12DCBE2DD003BB4F5 /* MainApp */ = {
+			isa = PBXGroup;
+			children = (
+				18109E932DCBE2B3003BB4F5 /* AppDelegate.swift */,
+				18109E952DCBE2B3003BB4F5 /* ContentView.swift */,
+				18109E962DCBE2B3003BB4F5 /* Couple_JoyApp.swift */,
+			);
+			path = MainApp;
+			sourceTree = "<group>";
+		};
+		18109EA22DCBE30E003BB4F5 /* WidgetExtension */ = {
+			isa = PBXGroup;
+			children = (
+				18109E972DCBE2B3003BB4F5 /* CoupleJoyWidget.swift */,
+				18109E992DCBE2B3003BB4F5 /* WidgetProvider.swift */,
+			);
+			path = WidgetExtension;
+			sourceTree = "<group>";
+		};
 		18E938522DCA556B00937F41 = {
 			isa = PBXGroup;
 			children = (
-				18E9385D2DCA556B00937F41 /* Couple Joy */,
+				18109EA22DCBE30E003BB4F5 /* WidgetExtension */,
+				18109EA12DCBE2DD003BB4F5 /* MainApp */,
 				18E9386B2DCA556C00937F41 /* Couple JoyTests */,
 				18E938752DCA556C00937F41 /* Couple JoyUITests */,
 				18E9385C2DCA556B00937F41 /* Products */,
+				18E9385D2DCA556B00937F41 /* Couple Joy */,
 			);
 			sourceTree = "<group>";
 		};
@@ -112,6 +158,12 @@
 			);
 			name = "Couple Joy";
 			packageProductDependencies = (
+				18E939042DCA73C000937F41 /* FirebaseAuth */,
+				18E939062DCA73C000937F41 /* FirebaseAuthCombine-Community */,
+				18E939082DCA73C000937F41 /* FirebaseFirestore */,
+				18E9390A2DCA73C000937F41 /* FirebaseFirestoreCombine-Community */,
+				18E9390D2DCA8CB500937F41 /* GoogleSignIn */,
+				18E9390F2DCA8CB500937F41 /* GoogleSignInSwift */,
 			);
 			productName = "Couple Joy";
 			productReference = 18E9385B2DCA556B00937F41 /* Couple Joy.app */;
@@ -195,6 +247,10 @@
 			);
 			mainGroup = 18E938522DCA556B00937F41;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				18E939032DCA73C000937F41 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
+				18E9390C2DCA8CB500937F41 /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 18E9385C2DCA556B00937F41 /* Products */;
 			projectDirPath = "";
@@ -236,6 +292,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				18109E9C2DCBE2B3003BB4F5 /* ContentView.swift in Sources */,
+				18109E9D2DCBE2B3003BB4F5 /* Couple_JoyApp.swift in Sources */,
+				18109E9E2DCBE2B3003BB4F5 /* CoupleJoyWidget.swift in Sources */,
+				18109E9F2DCBE2B3003BB4F5 /* WidgetProvider.swift in Sources */,
+				18109EA02DCBE2B3003BB4F5 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -400,6 +461,7 @@
 				DEVELOPMENT_TEAM = THAR6HQNXA;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "Couple-Joy-Info.plist";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -410,8 +472,11 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.chinjan.couple-joy.Couple-Joy";
+				PRODUCT_BUNDLE_IDENTIFIER = com.chinjan.couplejoy;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -428,6 +493,7 @@
 				DEVELOPMENT_TEAM = THAR6HQNXA;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "Couple-Joy-Info.plist";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -438,8 +504,11 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.chinjan.couple-joy.Couple-Joy";
+				PRODUCT_BUNDLE_IDENTIFIER = com.chinjan.couplejoy;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -558,6 +627,58 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		18E939032DCA73C000937F41 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/firebase/firebase-ios-sdk";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 11.12.0;
+			};
+		};
+		18E9390C2DCA8CB500937F41 /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/google/GoogleSignIn-iOS";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 8.0.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		18E939042DCA73C000937F41 /* FirebaseAuth */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 18E939032DCA73C000937F41 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseAuth;
+		};
+		18E939062DCA73C000937F41 /* FirebaseAuthCombine-Community */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 18E939032DCA73C000937F41 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = "FirebaseAuthCombine-Community";
+		};
+		18E939082DCA73C000937F41 /* FirebaseFirestore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 18E939032DCA73C000937F41 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseFirestore;
+		};
+		18E9390A2DCA73C000937F41 /* FirebaseFirestoreCombine-Community */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 18E939032DCA73C000937F41 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = "FirebaseFirestoreCombine-Community";
+		};
+		18E9390D2DCA8CB500937F41 /* GoogleSignIn */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 18E9390C2DCA8CB500937F41 /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */;
+			productName = GoogleSignIn;
+		};
+		18E9390F2DCA8CB500937F41 /* GoogleSignInSwift */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 18E9390C2DCA8CB500937F41 /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */;
+			productName = GoogleSignInSwift;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 18E938532DCA556B00937F41 /* Project object */;
 }

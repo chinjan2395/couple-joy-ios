@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>com.googleusercontent.apps.286910983059-fgfo37dp9sflrrqqntr77aoc3clchk8s</string>
+			</array>
+		</dict>
+	</array>
+	<key>GIDClientID</key>
+	<string>286910983059-fgfo37dp9sflrrqqntr77aoc3clchk8s.apps.googleusercontent.com</string>
+	<key>NSExtension</key>
+	<dict>
+		<key>NSExtensionAttributes</key>
+		<dict>
+			<key>IntentsSupported</key>
+			<array/>
+			<key>WidgetFamily</key>
+			<array>
+				<string>systemSmall</string>
+				<string>systemMedium</string>
+			</array>
+		</dict>
+		<key>NSExtensionPointIdentifier</key>
+		<string>com.apple.widgetkit-extension</string>
+	</dict>
+</dict>
+</plist>
