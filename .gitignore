@@ -1,0 +1,72 @@
+# Xcode
+.DS_Store
+build/
+DerivedData/
+*.pbxuser
+!default.pbxuser
+*.mode1v3
+!default.mode1v3
+*.mode2v3
+!default.mode2v3
+*.perspectivev3
+!default.perspectivev3
+xcuserdata/
+*.xcscmblueprint
+*.xccheckout
+
+# SwiftPM
+.build/
+.swiftpm/xcode/package.xcworkspace/
+.swiftpm/
+
+# CocoaPods
+Pods/
+Podfile.lock
+
+# Carthage
+Carthage/Build/
+
+# SwiftPM Packages (added via Xcode)
+Package.resolved
+
+# Xcode automatic preview files
+*.moc
+*.swp
+*.dat
+
+# User-specific files
+*.xcuserstate
+
+# Fastlane
+fastlane/report.xml
+fastlane/Preview.html
+fastlane/screenshots/
+fastlane/test_output/
+
+# Archives
+*.xcarchive
+
+# IDE Helpers
+.idea/
+*.hmap
+
+# Symbols
+*.dSYM.zip
+*.dSYM
+
+# Simulator logs
+coreSimulatorLogs/
+
+# Crashlytics / Firebase
+crashlytics-build.properties
+
+# Temporary files
+*.tmp
+*.temp
+*.orig
+
+# Logs
+*.log
+
+# XCFrameworks (optional, if auto-generated)
+*.xcframework
