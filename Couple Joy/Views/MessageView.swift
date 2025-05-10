@@ -18,35 +18,24 @@ struct MessageView: View {
     @State private var listener: ListenerRegistration?
     @State private var lastMessage: Message?
     @State private var newMessage: String = ""
+    @State private var currentTime = Date()
 
     var partnerDocument: String {
         return partnerRole == "partnerA" ? "partnerB" : "partnerA"
     }
 
+    var senderInitial: String {
+        return String(partnerDocument.uppercased().prefix(1))
+    }
+
     var body: some View {
             VStack(spacing: 16) {
                 if let message = lastMessage {
-                    HStack(spacing: 10) {
-                        Circle()
-                            .fill(Color.pink)
-                            .frame(width: 36, height: 36)
-                            .overlay(
-//                                Text(message.senderInitial)
-                                Text("A")
-                                    .foregroundColor(.white)
-                                    .font(.headline)
-                            )
-
-                        VStack(alignment: .leading, spacing: 4) {
-                            Text(message.text)
-                                .font(.body)
-
-                            Text(timeAgo(from: message.timestamp))
-                                .font(.caption)
-                                .foregroundColor(.gray)
-                        }
-                    }
-                    .padding()
+                    MessageBubbleView(
+                        message: message,
+                        partnerInitial: String(partnerDocument.prefix(1)),
+                        currentTime: currentTime,
+                    )
                 } else {
                     Text("No message yet")
                         .foregroundColor(.gray)
@@ -68,7 +57,10 @@ struct MessageView: View {
                 .padding()
             }
             .onAppear {
-                listenForLastMessage()
+                Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { _ in
+                        self.currentTime = Date()
+                    }
+                listenForLastMessage(currentRole: partnerRole)
             }
         }
 
@@ -85,52 +77,30 @@ struct MessageView: View {
 //            }
 //    }
     
-    func listenForLastMessage() {
-            let db = Firestore.firestore()
-            db.collection("couples")
-                .document(coupleId)
-                .collection("roles")
-                .order(by: "timestamp", descending: true)
-                .limit(to: 1)
-                .addSnapshotListener { snapshot, error in
-                    if let error = error {
-                        print("Error listening: \(error.localizedDescription)")
-                        return
-                    }
-
-                    guard let document = snapshot?.documents.first else {
-                        self.lastMessage = nil
-                        return
-                    }
-
-                    self.lastMessage = try? document.data(as: Message.self)
-                }
+    func listenForLastMessage(currentRole: String) {
+        listener = FirestoreManager.shared.listenToPartnerMessage(
+            coupleId: coupleId,
+            currentRole: partnerRole
+        ) { partnerMessage in
+            self.lastMessage = partnerMessage
         }
+    }
 
     func sendMessage() {
-            guard !newMessage.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else { return }
+        guard
+            !newMessage.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+        else { return }
 
-            let db = Firestore.firestore()
-            let deviceName = UIDevice.current.name
-            let senderInitial = String(partnerRole.uppercased().prefix(1))
-            let message = Message(
-                text: newMessage,
-                timestamp: Date(),
-                uid: userId,
-                device: deviceName
-            )
-
-            do {
-                try db.collection("couples")
-                    .document(coupleId)
-                    .collection("roles")
-                    .document(partnerRole)
-                    .setData(from: message, merge: true)
-//                    .setData(data, merge: true, completion: completion)
-//                    .addDocument(from: message)
+        FirestoreManager.shared.sendMessage(
+            coupleId: coupleId,
+            role: partnerRole,
+            message: newMessage
+        ) { error in
+            if let error = error {
+                print("Failed to send message: \(error)")
+            } else {
                 newMessage = ""
-            } catch {
-                print("Error sending message: \(error.localizedDescription)")
             }
         }
+    }
 }
