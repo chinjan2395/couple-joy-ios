@@ -70,28 +70,6 @@ class FirestoreManager {
             .setData(data, merge: true, completion: completion)
     }
 
-    func observeMessage(
-        coupleId: String,
-        partnerRole: String,
-        onUpdate: @escaping (_ text: String?, _ timestamp: Date?) -> Void
-    ) {
-        db.collection("couples")
-            .document(coupleId)
-            .collection("roles")
-            .document(partnerRole)
-            .addSnapshotListener { snapshot, error in
-                guard let data = snapshot?.data(),
-                    let message = data["message"] as? String,
-                    let timestamp = (data["timestamp"] as? Timestamp)?
-                        .dateValue()
-                else {
-                    onUpdate(nil, nil)
-                    return
-                }
-                onUpdate(message, timestamp)
-            }
-    }
-
     // MARK: - Listen to Last Partner Message
     func listenToPartnerMessage(
         coupleId: String,
