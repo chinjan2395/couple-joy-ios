@@ -13,8 +13,6 @@ struct MessageView: View {
     let partnerRole: String
     let userId: String
 
-//    @State private var messageText = ""
-//    @State private var partnerMessage = ""
     @State private var listener: ListenerRegistration?
     @State private var lastMessage: Message?
     @State private var newMessage: String = ""
@@ -29,54 +27,41 @@ struct MessageView: View {
     }
 
     var body: some View {
-            VStack(spacing: 16) {
-                if let message = lastMessage {
-                    MessageBubbleView(
-                        message: message,
-                        partnerInitial: String(partnerDocument.prefix(1)),
-                        currentTime: currentTime,
-                    )
-                } else {
-                    Text("No message yet")
-                        .foregroundColor(.gray)
-                }
-
-                HStack {
-                    TextField("Type your message...", text: $newMessage)
-                        .textFieldStyle(RoundedBorderTextFieldStyle())
-                        .padding(.horizontal)
-
-                    Button(action: sendMessage) {
-                        Image(systemName: "paperplane.fill")
-                            .foregroundColor(.white)
-                            .padding()
-                            .background(Color.blue)
-                            .clipShape(Circle())
-                    }
-                }
-                .padding()
+        VStack(spacing: 16) {
+            if let message = lastMessage {
+                MessageBubbleView(
+                    message: message,
+                    partnerInitial: String(partnerDocument.prefix(1)),
+                    currentTime: currentTime,
+                )
+            } else {
+                Text("No message yet")
+                    .foregroundColor(.gray)
             }
-            .onAppear {
-                Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { _ in
-                        self.currentTime = Date()
-                    }
-                listenForLastMessage(currentRole: partnerRole)
+
+            HStack {
+                TextField("Type your message...", text: $newMessage)
+                    .textFieldStyle(RoundedBorderTextFieldStyle())
+                    .padding(.horizontal)
+
+                Button(action: sendMessage) {
+                    Image(systemName: "paperplane.fill")
+                        .foregroundColor(.white)
+                        .padding()
+                        .background(Color.blue)
+                        .clipShape(Circle())
+                }
             }
+            .padding()
         }
+        .onAppear {
+            Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { _ in
+                self.currentTime = Date()
+            }
+            listenForLastMessage(currentRole: partnerRole)
+        }
+    }
 
-//    func subscribeToPartnerMessage() {
-//        let db = Firestore.firestore()
-//        listener = db.collection("couples")
-//            .document(coupleId)
-//            .collection("roles")
-//            .document(partnerDocument)
-//            .addSnapshotListener { snapshot, error in
-//                if let data = snapshot?.data(), let msg = data["message"] as? String {
-//                    self.partnerMessage = msg
-//                }
-//            }
-//    }
-    
     func listenForLastMessage(currentRole: String) {
         listener = FirestoreManager.shared.listenToPartnerMessage(
             coupleId: coupleId,
