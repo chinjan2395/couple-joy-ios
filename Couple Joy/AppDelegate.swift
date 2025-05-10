@@ -8,8 +8,9 @@
 import UIKit
 import Firebase
 import FirebaseCore
+import GoogleSignIn
 
-//@main
+//@UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(_ application: UIApplication,
@@ -19,9 +20,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 
     // MARK: UISceneSession Lifecycle
-    func application(_ application: UIApplication,
-                     configurationForConnecting connectingSceneSession: UISceneSession,
-                     options: UIScene.ConnectionOptions) -> UISceneConfiguration {
-        return UISceneConfiguration(name: "Default Configuration", sessionRole: connectingSceneSession.role)
-    }
+    // Required if using Google Sign-In
+       func application(_ app: UIApplication, open url: URL,
+                        options: [UIApplication.OpenURLOptionsKey : Any] = [:]) -> Bool {
+           return GIDSignIn.sharedInstance.handle(url)
+       }
 }
