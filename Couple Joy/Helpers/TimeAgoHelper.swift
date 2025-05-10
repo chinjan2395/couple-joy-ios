@@ -7,8 +7,16 @@
 
 import Foundation
 
-func timeAgo(from date: Date) -> String {
-    let formatter = RelativeDateTimeFormatter()
-    formatter.unitsStyle = .short
-    return formatter.localizedString(for: date, relativeTo: Date())
+func timeAgo(from: Date, to currentDate: Date) -> String {
+    let interval = Int(currentDate.timeIntervalSince(from))
+
+    if interval < 60 {
+        return "\(interval) sec ago"
+    } else if interval < 3600 {
+        return "\(interval / 60) min ago"
+    } else if interval < 86400 {
+        return "\(interval / 3600) hr ago"
+    } else {
+        return "\(interval / 86400) day ago"
+    }
 }
