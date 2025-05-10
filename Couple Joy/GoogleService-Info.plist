@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>286910983059-fgfo37dp9sflrrqqntr77aoc3clchk8s.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.286910983059-fgfo37dp9sflrrqqntr77aoc3clchk8s</string>
+	<key>ANDROID_CLIENT_ID</key>
+	<string>286910983059-gshno5vp5hfmf2v1gu910alpo8brs8qg.apps.googleusercontent.com</string>
+	<key>API_KEY</key>
+	<string>AIzaSyDpLqXRZsOsa2H_5zo8_Ex4Jhm7bciJhXs</string>
+	<key>GCM_SENDER_ID</key>
+	<string>286910983059</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.chinjan.couplejoy</string>
+	<key>PROJECT_ID</key>
+	<string>couple-joy</string>
+	<key>STORAGE_BUCKET</key>
+	<string>couple-joy.firebasestorage.app</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:286910983059:ios:5e956f118fec484906d666</string>
+</dict>
+</plist>
