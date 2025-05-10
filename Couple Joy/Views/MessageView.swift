@@ -10,7 +10,7 @@ import Firebase
 
 struct MessageView: View {
     let coupleId: String
-    let partnerRole: String
+    let partnerRole: PartnerRole
     let userId: String
 
     @State private var listener: ListenerRegistration?
@@ -65,7 +65,7 @@ struct MessageView: View {
     func listenForLastMessage(currentRole: String) {
         listener = FirestoreManager.shared.listenToPartnerMessage(
             coupleId: coupleId,
-            currentRole: partnerRole
+            currentRole: PartnerRole(rawValue: currentRole)!
         ) { partnerMessage in
             self.lastMessage = partnerMessage
         }

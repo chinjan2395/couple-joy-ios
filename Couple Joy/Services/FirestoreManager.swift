@@ -20,7 +20,7 @@ class FirestoreManager {
     // MARK: - Partner Setup
     func savePartnerInfo(
         coupleId: String,
-        role: String,
+        role: PartnerRole,
         completion: @escaping (Error?) -> Void
     ) {
         let data: [String: Any] = [
@@ -36,7 +36,7 @@ class FirestoreManager {
 
     func sendMessage(
         coupleId: String,
-        role: String,
+        role: PartnerRole,
         message: String,
         completion: ((Error?) -> Void)? = nil
     ) {
@@ -67,10 +67,10 @@ class FirestoreManager {
     // MARK: - Listen to Last Partner Message
     func listenToPartnerMessage(
         coupleId: String,
-        currentRole: String,
+        currentRole: PartnerRole,
         completion: @escaping (Message?) -> Void
     ) -> ListenerRegistration {
-        let partnerRole = currentRole == "partnerA" ? "partnerB" : "partnerA"
+        let partnerRole = currentRole.opposite
 
         return partnerDoc(coupleId: coupleId, role: partnerRole)
             .addSnapshotListener { snapshot, error in
