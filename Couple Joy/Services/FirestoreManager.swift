@@ -28,10 +28,7 @@ class FirestoreManager {
             "timestamp": FieldValue.serverTimestamp(),
         ]
 
-        db.collection("couples")
-            .document(coupleId)
-            .collection("roles")
-            .document(role)
+        partnerDoc(coupleId: coupleId, role: role)
             .setData(data, merge: true) { error in
                 completion(error)
             }
@@ -63,10 +60,7 @@ class FirestoreManager {
             "device": device,
         ]
 
-        db.collection("couples")
-            .document(coupleId)
-            .collection("roles")
-            .document(role)
+        partnerDoc(coupleId: coupleId, role: role)
             .setData(data, merge: true, completion: completion)
     }
 
@@ -78,10 +72,7 @@ class FirestoreManager {
     ) -> ListenerRegistration {
         let partnerRole = currentRole == "partnerA" ? "partnerB" : "partnerA"
 
-        return db.collection("couples")
-            .document(coupleId)
-            .collection("roles")
-            .document(partnerRole)
+        return partnerDoc(coupleId: coupleId, role: partnerRole)
             .addSnapshotListener { snapshot, error in
                 guard (snapshot?.data()) != nil else {
                     completion(nil)
@@ -96,5 +87,13 @@ class FirestoreManager {
                     completion(nil)
                 }
             }
+    }
+
+    private func partnerDoc(coupleId: String, role: PartnerRole) -> DocumentReference
+    {
+        return db.collection("couples")
+            .document(coupleId)
+            .collection("roles")
+            .document(role.rawValue)
     }
 }
