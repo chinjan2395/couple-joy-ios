@@ -9,79 +9,72 @@ import FirebaseAuth
 import SwiftUI
 
 struct PartnerSetupView: View {
-
-    @State private var coupleId: String = ""
-    @State private var selectedPartnerRole: String = ""
+    @AppStorage("coupleId", store: UserDefaults(suiteName: "group.com.chinjan.couplejoy")) var coupleId = ""
+    @AppStorage("role", store: UserDefaults(suiteName: "group.com.chinjan.couplejoy")) var selectedRole = ""
+    
     @State private var navigateToMessages = false
-
+    @State private var tempCoupleId = "chinjan2024"
+    @State private var roleSelection = ""
+    @State private var showMessageScreen = false
+    @State private var isSaving = false
+    
     let userId: String
-
+    
     var body: some View {
         VStack(spacing: 20) {
-            Text("Enter Group ID")
-                .font(.title2)
-
-            TextField("e.g. chinjan2024", text: $coupleId)
+            Text("Setup Your Partner Role")
+                .font(.title)
+            
+            TextField("Enter Couple ID", text: $tempCoupleId)
                 .textFieldStyle(RoundedBorderTextFieldStyle())
-                .padding()
-
-            Text("Select Your Role")
-                .font(.headline)
-
-            HStack(spacing: 40) {
-                Button(action: {
-                    selectedPartnerRole = "partnerA"
-                }) {
-                    Text("Partner A")
-                        .padding()
-                        .frame(maxWidth: .infinity)
-                        .background(
-                            selectedPartnerRole == "partnerA"
-                                ? Color.blue : Color.gray.opacity(0.3)
-                        )
-                        .foregroundColor(.white)
-                        .cornerRadius(10)
-                }
-
-                Button(action: {
-                    selectedPartnerRole = "partnerB"
-                }) {
-                    Text("Partner B")
-                        .padding()
-                        .frame(maxWidth: .infinity)
-                        .background(
-                            selectedPartnerRole == "partnerB"
-                                ? Color.pink : Color.gray.opacity(0.3)
-                        )
-                        .foregroundColor(.white)
-                        .cornerRadius(10)
-                }
+                .padding(.horizontal)
+            
+            Picker("Select Role", selection: $roleSelection) {
+                Text("Partner A").tag("partnerA")
+                Text("Partner B").tag("partnerB")
             }
-
-            Spacer()
-
-            if !coupleId.isEmpty && !selectedPartnerRole.isEmpty {
-                NavigationLink(
-                    destination: MessageView(
-                        coupleId: coupleId,
-                        partnerRole: selectedPartnerRole,
-                        userId: userId
-                    ),
-                    isActive: $navigateToMessages
-                ) {
-                    Button("Continue") {
-                        navigateToMessages = true
-                    }
-                    .padding()
-                    .frame(maxWidth: .infinity)
-                    .background(Color.green)
-                    .foregroundColor(.white)
-                    .cornerRadius(10)
+            .pickerStyle(SegmentedPickerStyle())
+            .padding(.horizontal)
+            
+            if isSaving {
+                ProgressView()
+            } else {
+                Button("Continue") {
+                    savePartnerInfo()
                 }
+                .disabled(tempCoupleId.isEmpty || roleSelection.isEmpty)
+                .padding()
+                .background(Color.blue)
+                .foregroundColor(.white)
+                .cornerRadius(10)
             }
         }
         .padding()
-        .navigationTitle("Partner Setup")
+        .fullScreenCover(isPresented: $showMessageScreen) {
+            MessageView(coupleId: coupleId, partnerRole: selectedRole, userId: userId)
+        }
+    }
+    
+    private func savePartnerInfo() {
+        isSaving = true
+        coupleId = tempCoupleId
+        selectedRole = roleSelection
+        
+        let deviceName = UIDevice.current.name
+        
+        FirestoreManager.shared.savePartnerInfo(
+            coupleId: tempCoupleId,
+            role: roleSelection,
+        ) { error in
+            DispatchQueue.main.async {
+                isSaving = false
+                if let error = error {
+                    print("Error saving partner info: \(error)")
+                } else {
+                    showMessageScreen = true
+                }
+            }
+        }
     }
 }
 
