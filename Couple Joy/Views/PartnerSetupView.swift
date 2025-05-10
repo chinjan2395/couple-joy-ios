@@ -59,7 +59,7 @@ struct PartnerSetupView: View {
         .fullScreenCover(isPresented: $showMessageScreen) {
             MessageView(
                 coupleId: coupleId,
-                partnerRole: selectedRole,
+                partnerRole: PartnerRole(rawValue: selectedRole)!,
                 userId: userId
             )
         }
@@ -72,7 +72,7 @@ struct PartnerSetupView: View {
 
         FirestoreManager.shared.savePartnerInfo(
             coupleId: tempCoupleId,
-            role: roleSelection,
+            role: PartnerRole(rawValue: roleSelection)!,
         ) { error in
             DispatchQueue.main.async {
                 isSaving = false

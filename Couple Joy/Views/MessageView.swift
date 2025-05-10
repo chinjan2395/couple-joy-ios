@@ -19,11 +19,11 @@ struct MessageView: View {
     @State private var currentTime = Date()
 
     var partnerDocument: String {
-        return partnerRole == "partnerA" ? "partnerB" : "partnerA"
+        return partnerRole.opposite.rawValue
     }
-
-    var senderInitial: String {
-        return String(partnerDocument.uppercased().prefix(1))
+    
+    var partnerInitial: String {
+        return partnerRole.opposite.shortLabel
     }
 
     var body: some View {
@@ -31,7 +31,7 @@ struct MessageView: View {
             if let message = lastMessage {
                 MessageBubbleView(
                     message: message,
-                    partnerInitial: String(partnerDocument.prefix(1)),
+                    partnerInitial: partnerInitial,
                     currentTime: currentTime,
                 )
             } else {
@@ -58,7 +58,7 @@ struct MessageView: View {
             Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { _ in
                 self.currentTime = Date()
             }
-            listenForLastMessage(currentRole: partnerRole)
+            listenForLastMessage(currentRole: partnerRole.rawValue)
         }
     }
 
