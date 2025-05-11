@@ -49,7 +49,36 @@ struct PartnerSetupView: View {
                 ProgressView()
             } else {
                 Button("Continue") {
-                    savePartnerInfo()
+                    coupleId = tempCoupleId  // update the actual @AppStorage value
+                    print(
+                        "coupleId \(coupleId) /r/ roleSelection \(roleSelection)"
+                    )
+                    FirestoreManager.shared.isPartnerRoleAvailable(
+                        coupleId: coupleId,
+                        role: PartnerRole(rawValue: roleSelection)!
+                    ) { available in
+                        print("available \(available)")
+                        if available {
+                            FirestoreManager.shared.savePartnerInfo(
+                                coupleId: coupleId,
+                                role: PartnerRole(rawValue: roleSelection)!
+                            ) { error in
+                                if let error = error {
+                                    // handle error
+                                    self.errorMessage =
+                                        "Internal error. Please try again later."
+                                    self.showingError = true
+                                } else {
+                                    savePartnerInfo()
+                                }
+                            }
+                        } else {
+                            // show error: role already taken
+                            self.errorMessage =
+                                "This role is already selected by your partner. Please choose the other one."
+                            self.showingError = true
+                        }
+                    }
                 }
                 .disabled(tempCoupleId.isEmpty || roleSelection.isEmpty)
                 .padding()
