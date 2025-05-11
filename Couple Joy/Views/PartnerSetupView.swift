@@ -66,6 +66,15 @@ struct PartnerSetupView: View {
                 userId: userId
             )
         }
+        .alert("Error", isPresented: $showingError) {
+            Button("OK", role: .cancel) {}
+        } message: {
+            Text(errorMessage)
+        }
+        .onAppear {
+            tempCoupleId = coupleId  // Pre-fill if already saved
+            roleSelection = selectedRole
+        }
     }
 
     private func savePartnerInfo() {
