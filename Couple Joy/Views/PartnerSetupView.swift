@@ -14,7 +14,7 @@ struct PartnerSetupView: View {
         store: UserDefaults(suiteName: "group.com.chinjan.couplejoy")
     ) var coupleId = ""
     @AppStorage(
-        "role",
+        "partnerRole",
         store: UserDefaults(suiteName: "group.com.chinjan.couplejoy")
     ) var selectedRole = ""
 
@@ -23,6 +23,9 @@ struct PartnerSetupView: View {
     @State private var roleSelection = ""
     @State private var showMessageScreen = false
     @State private var isSaving = false
+
+    @State private var errorMessage = ""
+    @State private var showingError = false
 
     let userId: String
 
