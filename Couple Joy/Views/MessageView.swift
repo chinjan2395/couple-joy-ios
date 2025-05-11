@@ -28,7 +28,11 @@ struct MessageView: View {
     var partnerDocument: String {
         return partnerRole.opposite.rawValue
     }
-    
+
+    var ownerInitial: String {
+        return partnerRole.owner.shortLabel
+    }
+
     var partnerInitial: String {
         return partnerRole.opposite.shortLabel
     }
