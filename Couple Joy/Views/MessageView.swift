@@ -5,8 +5,9 @@
 //  Created by Chinjan Patel on 10/05/25.
 //  Messaging interface (chat)
 
-import SwiftUI
 import Firebase
+import FirebaseAuth
+import SwiftUI
 
 struct MessageView: View {
     let coupleId: String
@@ -17,7 +18,7 @@ struct MessageView: View {
     @State private var lastMessage: Message?
     @State private var newMessage: String = ""
     @State private var currentTime = Date()
-    
+
     @Environment(\.dismiss) private var dismiss
 
     // These match the keys used in PartnerSetupView
@@ -42,13 +43,13 @@ struct MessageView: View {
             // Partner Avatar & Couple ID
             VStack(spacing: 8) {
                 // Partner Initial Circle
-               Text(ownerInitial)
-                   .font(.system(size: 36, weight: .bold))
-                   .frame(width: 80, height: 80)
-                   .background(AppColors.accentPink)
-                   .clipShape(Circle())
-                   .foregroundColor(AppColors.white)
-                   .shadow(color: AppColors.accentPink.opacity(0.4), radius: 8)
+                Text(ownerInitial)
+                    .font(.system(size: 36, weight: .bold))
+                    .frame(width: 80, height: 80)
+                    .background(AppColors.accentPink)
+                    .clipShape(Circle())
+                    .foregroundColor(AppColors.white)
+                    .shadow(color: AppColors.accentPink.opacity(0.4), radius: 8)
 
                 // Subtle Couple ID
                 Text("Couple ID: \(coupleId)")
