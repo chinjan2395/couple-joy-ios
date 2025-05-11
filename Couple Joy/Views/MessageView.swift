@@ -39,6 +39,24 @@ struct MessageView: View {
 
     var body: some View {
         VStack(spacing: 16) {
+            // Partner Avatar & Couple ID
+            VStack(spacing: 8) {
+                // Partner Initial Circle
+               Text(ownerInitial)
+                   .font(.system(size: 36, weight: .bold))
+                   .frame(width: 80, height: 80)
+                   .background(AppColors.accentPink)
+                   .clipShape(Circle())
+                   .foregroundColor(AppColors.white)
+                   .shadow(color: AppColors.accentPink.opacity(0.4), radius: 8)
+
+                // Subtle Couple ID
+                Text("Couple ID: \(coupleId)")
+                    .font(AppFonts.subtitleFont())
+                    .foregroundColor(AppColors.textSecondary)
+            }
+
+            // Last Message or Placeholder
             if let message = lastMessage {
                 MessageBubbleView(
                     message: message,
