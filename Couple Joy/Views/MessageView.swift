@@ -17,6 +17,13 @@ struct MessageView: View {
     @State private var lastMessage: Message?
     @State private var newMessage: String = ""
     @State private var currentTime = Date()
+    
+    @Environment(\.dismiss) private var dismiss
+
+    // These match the keys used in PartnerSetupView
+    @AppStorage("partnerRole") private var storedPartnerRole: String = ""
+    @AppStorage("partnerInitial") private var storedPartnerInitial: String = ""
+    @AppStorage("coupleId") private var storedCoupleId: String = ""
 
     var partnerDocument: String {
         return partnerRole.opposite.rawValue
