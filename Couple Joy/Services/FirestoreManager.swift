@@ -51,7 +51,45 @@ class FirestoreManager {
                 completion(error)
             }
     }
-
+    
+    // MARK: - Check Partner Availibility
+    func isPartnerRoleAvailable(
+        coupleId: String,
+        role: PartnerRole,
+        completion: @escaping (Bool) -> Void
+    ) {
+        guard !coupleId.isEmpty else {
+                    print("Error: coupleId is empty in isPartnerRoleAvailable")
+                    completion(false)
+                    return
+                }
+        guard let uid = Auth.auth().currentUser?.uid else {
+            print("Error: User not authenticated")
+                    completion(false)
+                    return
+        }
+        partnerDoc(coupleId: coupleId, role: role)
+            .getDocument { document, error in
+                if let document = document, document.exists {
+                    // Role is already taken
+                    print("document")
+                    print(document.data() as Any)
+                    if (document.data()?["uid"] as! String != uid) {
+                        print("This partner is already registered. Please choose the other.")
+                        completion(false)
+                    } else {
+                        print("else of partnerDoc")
+                        completion(true)
+                    }
+                } else {
+                    // Role is available
+                    completion(true)
+                }
+            }
+    }
+    
+    
+    // MARK: - Store Message in Firbase
     func sendMessage(
         coupleId: String,
         role: PartnerRole,
