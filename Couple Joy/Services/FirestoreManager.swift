@@ -107,28 +107,23 @@ class FirestoreManager {
         message: String,
         completion: ((Error?) -> Void)? = nil
     ) {
-        guard let uid = Auth.auth().currentUser?.uid else {
-            completion?(
-                NSError(
-                    domain: "Auth",
-                    code: 401,
-                    userInfo: [
-                        NSLocalizedDescriptionKey: "User not authenticated"
-                    ]
-                )
-            )
-            return
+        AuthManager.shared.requireAuth { result in
+            switch result {
+            case .success(let uid):
+                let data: [String: Any] = [
+                    "message": message,
+                    "timestamp": FieldValue.serverTimestamp(),
+                    "uid": uid,
+                    "device": device,
+                ]
+
+                partnerDoc(coupleId: coupleId, role: role)
+                    .setData(data, merge: true, completion: completion)
+
+            case .failure(let error):
+                completion?(error)
+            }
         }
-
-        let data: [String: Any] = [
-            "message": message,
-            "timestamp": FieldValue.serverTimestamp(),
-            "uid": uid,
-            "device": device,
-        ]
-
-        partnerDoc(coupleId: coupleId, role: role)
-            .setData(data, merge: true, completion: completion)
     }
 
     // MARK: - Listen to Last Partner Message
