@@ -68,6 +68,11 @@ struct MessageView: View {
                     .foregroundColor(AppColors.textSecondary)
             }
 
+            // Prompt
+            Text("Send a sweet message to your partner…")
+                .font(.body)
+                .foregroundColor(AppColors.textSecondary)
+
             HStack {
                 TextField("Type something lovely...", text: $newMessage)
                     .padding()
