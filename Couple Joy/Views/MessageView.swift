@@ -95,9 +95,36 @@ struct MessageView: View {
                         )
                         .clipShape(Circle())
                 }
+                .disabled(newMessage.isEmpty)
             }
-            .padding()
+            .padding(.horizontal)
+
+            Spacer()
+
+            // Reset Setup
+            VStack {
+                Divider()
+                Text("Want to start fresh?")
+                    .font(.footnote)
+                    .foregroundColor(AppColors.textSecondary)
+                    .padding(.vertical, 8)
+
+                Button(action: resetSetup) {
+                    Text("Reset Setup")
+                        .foregroundColor(AppColors.textPrimary)
+                        .fontWeight(.medium)
+                        .padding(.horizontal, AppSpacing.large)
+                        .padding(.vertical, 8)
+                        .overlay(
+                            RoundedRectangle(cornerRadius: AppCorners.large)
+                                .stroke(AppColors.accentPink, lineWidth: 2)
+                        )
+                }
+            }
+            .padding(.top, 4)
         }
+        .padding(.bottom)
+        .background(AppColors.background.ignoresSafeArea())
         .onAppear {
             Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { _ in
                 self.currentTime = Date()
