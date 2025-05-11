@@ -56,27 +56,31 @@ struct PartnerSetupView: View {
                     FirestoreManager.shared.isPartnerRoleAvailable(
                         coupleId: coupleId,
                         role: PartnerRole(rawValue: roleSelection)!
-                    ) { available in
-                        print("available \(available)")
-                        if available {
-                            FirestoreManager.shared.savePartnerInfo(
-                                coupleId: coupleId,
-                                role: PartnerRole(rawValue: roleSelection)!
-                            ) { error in
-                                if let error = error {
-                                    // handle error
-                                    self.errorMessage =
-                                        "Internal error. Please try again later."
-                                    self.showingError = true
+                    ) { result in
+                        DispatchQueue.main.async {
+                            switch result {
+                            case .success(let available):
+                                if available {
+                                    FirestoreManager.shared.savePartnerInfo(
+                                        coupleId: coupleId,
+                                        role: PartnerRole(rawValue: roleSelection)!
+                                    ) { error in
+                                        if let error = error {
+                                            self.errorMessage = "Internal error. Please try again later."
+                                            self.showingError = true
+                                        } else {
+                                            savePartnerInfo()
+                                        }
+                                    }
                                 } else {
-                                    savePartnerInfo()
+                                    self.errorMessage = "This role is already selected by your partner. Please choose the other one."
+                                    self.showingError = true
                                 }
+                                
+                            case .failure(let error):
+                                self.errorMessage = error.localizedDescription
+                                self.showingError = true
                             }
-                        } else {
-                            // show error: role already taken
-                            self.errorMessage =
-                                "This role is already selected by your partner. Please choose the other one."
-                            self.showingError = true
                         }
                     }
                 }
