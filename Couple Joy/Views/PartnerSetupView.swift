@@ -19,7 +19,7 @@ struct PartnerSetupView: View {
     ) var selectedRole = ""
 
     @State private var navigateToMessages = false
-    @State private var tempCoupleId = ""
+    @State private var tempCoupleId = "testing"
     @State private var roleSelection = ""
     @State private var showMessageScreen = false
     @State private var isSaving = false
@@ -31,7 +31,7 @@ struct PartnerSetupView: View {
 
     var body: some View {
         VStack(spacing: 20) {
-            Text("Setup Your Partner Role")
+            Text("Setup Your Role")
                 .font(.title)
 
             TextField("Enter Couple ID", text: $tempCoupleId)
@@ -91,7 +91,7 @@ struct PartnerSetupView: View {
         .fullScreenCover(isPresented: $showMessageScreen) {
             MessageView(
                 coupleId: coupleId,
-                partnerRole: PartnerRole(rawValue: selectedRole)!,
+                partnerRole: PartnerRole(rawValue: roleSelection)!,
                 userId: userId
             )
         }
