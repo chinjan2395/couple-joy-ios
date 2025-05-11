@@ -11,6 +11,10 @@ enum PartnerRole: String, Codable {
     case partnerA
     case partnerB
 
+    var owner: PartnerRole {
+        return self
+    }
+
     var opposite: PartnerRole {
         return self == .partnerA ? .partnerB : .partnerA
     }
