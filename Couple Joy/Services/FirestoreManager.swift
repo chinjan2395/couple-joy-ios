@@ -42,6 +42,7 @@ class FirestoreManager {
         }
         let data: [String: Any] = [
             "device": device,
+            "uid": uid,
             "timestamp": FieldValue.serverTimestamp(),
         ]
 
