@@ -69,9 +69,15 @@ struct MessageView: View {
             }
 
             HStack {
-                TextField("Type your message...", text: $newMessage)
-                    .textFieldStyle(RoundedBorderTextFieldStyle())
-                    .padding(.horizontal)
+                TextField("Type something lovely...", text: $newMessage)
+                    .padding()
+                    .background(AppColors.white)
+                    .cornerRadius(AppCorners.extraLarge)
+                    .overlay(
+                        RoundedRectangle(cornerRadius: AppCorners.extraLarge)
+                            .stroke(AppColors.accentPink, lineWidth: 2)
+                    )
+                    .foregroundColor(AppColors.textPrimary)
 
                 Button(action: sendMessage) {
                     Image(systemName: "paperplane.fill")
