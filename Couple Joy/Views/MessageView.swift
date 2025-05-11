@@ -88,7 +88,11 @@ struct MessageView: View {
                     Image(systemName: "paperplane.fill")
                         .foregroundColor(.white)
                         .padding()
-                        .background(Color.blue)
+                        .background(
+                            newMessage.isEmpty
+                                ? AppColors.buttonDisabled
+                                : AppColors.accentPink
+                        )
                         .clipShape(Circle())
                 }
             }
