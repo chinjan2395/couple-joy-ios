@@ -23,6 +23,23 @@ class FirestoreManager {
         role: PartnerRole,
         completion: @escaping (Error?) -> Void
     ) {
+        guard !coupleId.isEmpty else {
+                    print("Error: coupleId is empty in savePartnerInfo")
+                    completion(NSError(domain: "", code: 400, userInfo: [NSLocalizedDescriptionKey: "Invalid couple ID"]))
+                    return
+                }
+        guard let uid = Auth.auth().currentUser?.uid else {
+            completion(
+                NSError(
+                    domain: "Auth",
+                    code: 401,
+                    userInfo: [
+                        NSLocalizedDescriptionKey: "User not authenticated"
+                    ]
+                )
+            )
+            return
+        }
         let data: [String: Any] = [
             "device": device,
             "timestamp": FieldValue.serverTimestamp(),
