@@ -65,7 +65,7 @@ struct MessageView: View {
                 )
             } else {
                 Text("No message yet")
-                    .foregroundColor(.gray)
+                    .foregroundColor(AppColors.textSecondary)
             }
 
             HStack {
