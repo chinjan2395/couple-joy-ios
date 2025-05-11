@@ -159,4 +159,15 @@ struct MessageView: View {
             }
         }
     }
+
+    private func resetSetup() {
+        // Clear stored data
+        storedPartnerRole = ""
+        storedPartnerInitial = ""
+        storedCoupleId = ""
+
+        try? Auth.auth().signOut()
+
+        dismiss()
+    }
 }
