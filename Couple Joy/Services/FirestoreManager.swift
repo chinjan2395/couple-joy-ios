@@ -62,17 +62,22 @@ class FirestoreManager {
     func isPartnerRoleAvailable(
         coupleId: String,
         role: PartnerRole,
-        completion: @escaping (Bool) -> Void
+        completion: @escaping (Result<Bool, Error>) -> Void
     ) {
         guard !coupleId.isEmpty else {
-                    print("Error: coupleId is empty in isPartnerRoleAvailable")
-                    completion(false)
-                    return
-                }
-        guard let uid = Auth.auth().currentUser?.uid else {
-            print("Error: User not authenticated")
-                    completion(false)
-                    return
+            print("Error: coupleId is empty in isPartnerRoleAvailable")
+            completion(
+                .failure(
+                    NSError(
+                        domain: "Input",
+                        code: 400,
+                        userInfo: [
+                            NSLocalizedDescriptionKey: "Couple ID is empty."
+                        ]
+                    )
+                )
+            )
+            return
         }
         partnerDoc(coupleId: coupleId, role: role)
             .getDocument { document, error in
