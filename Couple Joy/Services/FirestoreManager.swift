@@ -79,22 +79,39 @@ class FirestoreManager {
             )
             return
         }
-        partnerDoc(coupleId: coupleId, role: role)
-            .getDocument { document, error in
-                if let document = document, document.exists {
-                    // Role is already taken
-                    print("document")
-                    print(document.data() as Any)
-                    if (document.data()?["uid"] as! String != uid) {
-                        print("This partner is already registered. Please choose the other.")
-                        completion(false)
-                    } else {
-                        print("else of partnerDoc")
-                        completion(true)
+        AuthManager.shared.requireAuth { result in
+                switch result {
+                case .failure(let error):
+                    print("Auth Error: \(error.localizedDescription)")
+                    completion(.failure(error))
+
+                case .success(let uid):
+                    let partnerARoleRef = self.partnerDoc(coupleId: coupleId, role: .partnerA)
+                    let partnerBRoleRef = self.partnerDoc(coupleId: coupleId, role: .partnerB)
+
+                    partnerARoleRef.getDocument { docA, _ in
+                        partnerBRoleRef.getDocument { docB, _ in
+                            let uidA = docA?.data()?["uid"] as? String
+                            let uidB = docB?.data()?["uid"] as? String
+
+                            // CASE 1: Same user already selected *any* role → allow only reselect
+                            if (uidA == uid || uidB == uid) {
+                                if (uidA == uid && role != .partnerA) || (uidB == uid && role != .partnerB) {
+                                    completion(.success(false))
+                                } else {
+                                    completion(.success(true))
+                                }
+                            }
+                            // CASE 2: Someone else already took this role → deny
+                            else if (role == .partnerA && uidA != nil) || (role == .partnerB && uidB != nil) {
+                                completion(.success(false))
+                            }
+                            // CASE 3: Available
+                            else {
+                                completion(.success(true))
+                            }
+                        }
                     }
-                } else {
-                    // Role is available
-                    completion(true)
                 }
             }
     }
