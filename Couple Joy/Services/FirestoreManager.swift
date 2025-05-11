@@ -115,8 +115,7 @@ class FirestoreManager {
                 }
             }
     }
-    
-    
+
     // MARK: - Store Message in Firbase
     func sendMessage(
         coupleId: String,
@@ -168,7 +167,8 @@ class FirestoreManager {
             }
     }
 
-    private func partnerDoc(coupleId: String, role: PartnerRole) -> DocumentReference
+    private func partnerDoc(coupleId: String, role: PartnerRole)
+        -> DocumentReference
     {
         return db.collection("couples")
             .document(coupleId)
