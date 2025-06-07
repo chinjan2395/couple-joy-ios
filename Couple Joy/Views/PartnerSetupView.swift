@@ -112,64 +112,63 @@ struct PartnerSetupView: View {
                 ProgressView()
             } else {
                 Button("Continue") {
-                    coupleId = tempCoupleId  // update the actual @AppStorage value
-                    print(
-                        "coupleId \(coupleId) /r/ roleSelection \(roleSelection)"
-                    )
-                    FirestoreManager.shared.isPartnerRoleAvailable(
-                        coupleId: coupleId,
-                        role: PartnerRole(rawValue: roleSelection)!
-                    ) { result in
-                        DispatchQueue.main.async {
-                            switch result {
-                            case .success(let available):
-                                if available {
-                                    FirestoreManager.shared.savePartnerInfo(
-                                        coupleId: coupleId,
-                                        role: PartnerRole(rawValue: roleSelection)!
-                                    ) { error in
-                                        if let error = error {
-                                            self.errorMessage = "Internal error. Please try again later."
-                                            self.showingError = true
-                                        } else {
-                                            savePartnerInfo()
-                                        }
-                                    }
-                                } else {
-                                    self.errorMessage = "This role is already selected by your partner. Please choose the other one."
-                                    self.showingError = true
-                                }
-                                
-                            case .failure(let error):
-                                self.errorMessage = error.localizedDescription
-                                self.showingError = true
-                            }
-                        }
-                    }
+                    continueSetup()
                 }
                 .disabled(tempCoupleId.isEmpty || roleSelection.isEmpty)
                 .padding()
-                .background(Color.blue)
+                .background(AppColors.accentPink)
                 .foregroundColor(.white)
-                .cornerRadius(10)
+                .cornerRadius(AppCorners.medium)
             }
         }
-        .padding()
-        .fullScreenCover(isPresented: $showMessageScreen) {
-            MessageView(
-                coupleId: coupleId,
-                partnerRole: PartnerRole(rawValue: roleSelection)!,
-                userId: userId
-            )
+    }
+
+    func continueSetup() {
+        coupleId = tempCoupleId
+        guard let role = PartnerRole(rawValue: roleSelection) else {
+            errorMessage = "Invalid role selection."
+            showingError = true
+            return
         }
-        .alert("Error", isPresented: $showingError) {
-            Button("OK", role: .cancel) {}
-        } message: {
-            Text(errorMessage)
-        }
-        .onAppear {
-            tempCoupleId = coupleId  // Pre-fill if already saved
-            roleSelection = selectedRole
+
+        isSaving = true
+
+        FirestoreManager.shared.isPartnerRoleAvailable(
+            coupleId: coupleId,
+            role: PartnerRole(rawValue: roleSelection)!
+        ) { result in
+            DispatchQueue.main.async {
+                print("coupleid: \(coupleId), role: \(role)")
+                print("PartnerRole: \(PartnerRole(rawValue: roleSelection)!)")
+                switch result {
+                case .success(let available):
+                    if available {
+                        FirestoreManager.shared.savePartnerInfo(
+                            coupleId: coupleId,
+                            role: PartnerRole(rawValue: roleSelection)!
+                        ) { error in
+                            isSaving = false
+                            if let error = error {
+                                print("Error saving partner info: \(error.localizedDescription)")
+                                errorMessage = "Internal error. Please try again later."
+                                showingError = true
+                            } else {
+                                selectedRole = roleSelection
+                                showMessageScreen = true
+                            }
+                        }
+                    } else {
+                        isSaving = false
+                        errorMessage = "This role is already selected by your partner. Please choose the other one."
+                        showingError = true
+                    }
+                    
+                case .failure(let error):
+                    isSaving = false
+                    self.errorMessage = error.localizedDescription
+                    self.showingError = true
+                }
+            }
         }
     }
 
