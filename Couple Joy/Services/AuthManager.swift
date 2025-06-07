@@ -28,6 +28,22 @@ enum AuthError: LocalizedError {
 
 class AuthManager {
     static let shared = AuthManager()
+    
+    enum AuthError: LocalizedError {
+            case missingClientID
+            case noRootViewController
+            case invalidGoogleUser
+            case notAuthenticated
+
+            var errorDescription: String? {
+                switch self {
+                case .missingClientID: return "Missing Firebase client ID."
+                case .noRootViewController: return "Root view controller not found."
+                case .invalidGoogleUser: return "Google user data is invalid."
+                case .notAuthenticated: return "User is not authenticated."
+                }
+            }
+        }
 
     private init() {}
 
