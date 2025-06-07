@@ -31,6 +31,69 @@ struct PartnerSetupView: View {
 
     var body: some View {
         VStack(spacing: 20) {
+            if checkingAuth {
+                ProgressView("Checking authentication...")
+            } else if !isAuthenticated {
+                VStack(spacing: 20) {
+                    Text("You're signed out")
+                        .font(.title2)
+                        .bold()
+                    Button("Sign In Again") {
+                        AuthManager.shared.signInWithGoogle { error in
+                            if error == nil {
+                                isAuthenticated = true
+                            } else {
+                                print("Error saving partner info: \(error?.localizedDescription)")
+                                errorMessage =
+                                    "Sign-in failed. Please try again."
+                                showingError = true
+                            }
+                        }
+                    }
+                    .padding()
+                    .background(AppColors.accentPink)
+                    .foregroundColor(.white)
+                    .cornerRadius(AppCorners.medium)
+                }
+            } else {
+                mainPartnerSetupView()
+            }
+        }
+        .padding()
+        .fullScreenCover(isPresented: $showMessageScreen) {
+            MessageView(
+                coupleId: coupleId,
+                partnerRole: PartnerRole(rawValue: roleSelection)!,
+                userId: userId
+            )
+        }
+        .alert("Error", isPresented: $showingError) {
+            Button("OK", role: .cancel) {}
+        } message: {
+            Text(errorMessage)
+        }
+        .onAppear {
+            print("AUTH CHECK")
+            tempCoupleId = coupleId  // Pre-fill if already saved
+            roleSelection = selectedRole
+            
+            AuthManager.shared.requireAuth { result in
+                    DispatchQueue.main.async {
+                        checkingAuth = false
+                        switch result {
+                        case .success:
+                            isAuthenticated = true
+                        case .failure:
+                            isAuthenticated = false
+                        }
+                    }
+                }
+        }
+    }
+    
+    @ViewBuilder
+    func mainPartnerSetupView() -> some View {
+        VStack(spacing: 20) {
             Text("Setup Your Role")
                 .font(.title)
 
