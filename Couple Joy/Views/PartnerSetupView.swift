@@ -26,6 +26,8 @@ struct PartnerSetupView: View {
 
     @State private var errorMessage = ""
     @State private var showingError = false
+    @State private var isAuthenticated = false
+    @State private var checkingAuth = true
 
     let userId: String
 
