@@ -10,6 +10,10 @@ import FirebaseAuth
 
 enum AuthError: LocalizedError {
     case userNotAuthenticated
+    case missingClientID
+    case noRootViewController
+    case invalidGoogleUser
+    case notAuthenticated
 
     var errorDescription: String? {
         switch self {
