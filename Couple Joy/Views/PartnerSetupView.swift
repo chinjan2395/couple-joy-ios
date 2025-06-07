@@ -99,6 +99,8 @@ struct PartnerSetupView: View {
 
             TextField("Enter Couple ID", text: $tempCoupleId)
                 .textFieldStyle(RoundedBorderTextFieldStyle())
+                .autocapitalization(.none)
+                .textInputAutocapitalization(.never) // Recommended for iOS 15+
                 .padding(.horizontal)
 
             Picker("Select Role", selection: $roleSelection) {
