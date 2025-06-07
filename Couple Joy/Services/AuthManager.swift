@@ -6,7 +6,11 @@
 //
 
 import Foundation
+import Firebase
 import FirebaseAuth
+import FirebaseFirestore
+import GoogleSignIn
+import GoogleSignInSwift
 
 enum AuthError: LocalizedError {
     case userNotAuthenticated
@@ -97,7 +101,7 @@ class AuthManager {
         if let uid = currentUserID {
             completion(.success(uid))
         } else {
-            completion(.failure(.userNotAuthenticated))
+            completion(.failure(.notAuthenticated))
         }
     }
 }
