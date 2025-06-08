@@ -50,6 +50,38 @@ class AuthManager: ObservableObject {
         return Auth.auth().currentUser?.uid
     }
     
+    var currentUser: User? {
+            Auth.auth().currentUser
+    }
+    
+    func setupAuthListener() {
+        authListener = Auth.auth().addStateDidChangeListener { [weak self] _, user in
+            DispatchQueue.main.async {
+                self?.isSignedIn = user != nil
+                self?.isLoading = false
+            }
+        }
+    }
+
+    func signInIfNeeded() {
+        if let user = Auth.auth().currentUser {
+            isSignedIn = true
+            isLoading = false
+        } else {
+            isLoading = true
+            signInWithGoogle { error in
+                DispatchQueue.main.async {
+                    if error == nil {
+                        self.isSignedIn = true
+                    } else {
+                        self.isSignedIn = false
+                    }
+                    self.isLoading = false
+                }
+            }
+        }
+    }
+    
     func signInWithGoogle(completion: @escaping (Error?) -> Void) {
             GIDSignIn.sharedInstance.signOut()
             
