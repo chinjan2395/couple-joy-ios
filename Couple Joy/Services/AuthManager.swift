@@ -127,4 +127,10 @@ class AuthManager: ObservableObject {
             completion(.failure(.notAuthenticated))
         }
     }
+    
+    deinit {
+            if let listener = authListener {
+                Auth.auth().removeStateDidChangeListener(listener)
+            }
+        }
 }
