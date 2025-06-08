@@ -30,7 +30,7 @@ enum AuthError: LocalizedError {
     }
 }
 
-class AuthManager {
+class AuthManager: ObservableObject {
     static let shared = AuthManager()
     
     enum AuthError: LocalizedError {
