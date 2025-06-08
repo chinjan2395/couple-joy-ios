@@ -37,7 +37,7 @@ struct PartnerSetupView: View {
                 ProgressView("Checking authentication...")
             } else if !isAuthenticated {
                 VStack(spacing: 20) {
-                    Text("You're signed out")
+                    Text("You’re signed out")
                         .font(.title2)
                         .bold()
                     Button("Sign In Again") {
@@ -45,9 +45,7 @@ struct PartnerSetupView: View {
                             if error == nil {
                                 isAuthenticated = true
                             } else {
-                                print("Error saving partner info: \(error?.localizedDescription)")
-                                errorMessage =
-                                    "Sign-in failed. Please try again."
+                                errorMessage = "Sign-in failed. Please try again."
                                 showingError = true
                             }
                         }
