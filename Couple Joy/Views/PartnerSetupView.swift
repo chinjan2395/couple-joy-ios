@@ -68,13 +68,12 @@ struct PartnerSetupView: View {
             )
         }
         .alert("Error", isPresented: $showingError) {
-            Button("OK", role: .cancel) {}
+            Button("OK", role: .cancel) { }
         } message: {
             Text(errorMessage)
         }
         .onAppear {
-            print("AUTH CHECK")
-            tempCoupleId = coupleId  // Pre-fill if already saved
+            tempCoupleId = coupleId
             roleSelection = selectedRole
             
             AuthManager.shared.requireAuth { result in
@@ -90,7 +89,8 @@ struct PartnerSetupView: View {
                 }
         }
     }
-    
+
+    // MARK: - Main Setup View
     @ViewBuilder
     func mainPartnerSetupView() -> some View {
         VStack(spacing: 20) {
@@ -140,8 +140,6 @@ struct PartnerSetupView: View {
             role: PartnerRole(rawValue: roleSelection)!
         ) { result in
             DispatchQueue.main.async {
-                print("coupleid: \(coupleId), role: \(role)")
-                print("PartnerRole: \(PartnerRole(rawValue: roleSelection)!)")
                 switch result {
                 case .success(let available):
                     if available {
