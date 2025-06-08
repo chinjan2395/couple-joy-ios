@@ -12,13 +12,14 @@ struct ContentView: View {
     @StateObject private var authManager = AuthManager.shared
 
     var body: some View {
-        NavigationView {
-            VStack(spacing: 20) {
-                if isSignedIn {
-                    NavigationStack {
-                        PartnerSetupView(userId: userId ?? "")
-                    }
-                } else {
+        VStack(spacing: 20) {
+            if authManager.isLoading {
+                ProgressView("Loading...")
+            } else if authManager.isSignedIn {
+                PartnerSetupView(userId: userId ?? "")
+            } else {
+                VStack {
+//                    Text(AuthError.notAuthenticated.localizedDescription)
                     Button(action: handleSignInButton) {
                         HStack {
                             Image(systemName: "person.crop.circle.badge.checkmark")
@@ -29,16 +30,13 @@ struct ContentView: View {
                         .foregroundColor(.white)
                         .cornerRadius(10)
                     }
-                }
-            }
-            .padding()
-        }
-        .onAppear {
-            if let currentUser = Auth.auth().currentUser {
-                self.userId = currentUser.uid
-                self.isSignedIn = true
+                        }
             }
         }
+        // Auth listener should only be set up once
+//        .onAppear {
+//            authManager.setupAuthListener()
+//        }
     }
 
     func handleSignInButton() {
