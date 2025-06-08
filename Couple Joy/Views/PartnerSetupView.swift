@@ -93,9 +93,10 @@ struct PartnerSetupView: View {
     // MARK: - Main Setup View
     @ViewBuilder
     func mainPartnerSetupView() -> some View {
-        VStack(spacing: 20) {
+        VStack(spacing: 24) {
             Text("Setup Your Role")
                 .font(.title)
+                .bold()
 
             TextField("Enter Couple ID", text: $tempCoupleId)
                 .textFieldStyle(RoundedBorderTextFieldStyle())
