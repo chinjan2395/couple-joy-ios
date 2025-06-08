@@ -175,26 +175,6 @@ struct PartnerSetupView: View {
             }
         }
     }
-
-    private func savePartnerInfo() {
-        isSaving = true
-        coupleId = tempCoupleId
-        selectedRole = roleSelection
-
-        FirestoreManager.shared.savePartnerInfo(
-            coupleId: tempCoupleId,
-            role: PartnerRole(rawValue: roleSelection)!,
-        ) { error in
-            DispatchQueue.main.async {
-                isSaving = false
-                if let error = error {
-                    print("Error saving partner info: \(error)")
-                } else {
-                    showMessageScreen = true
-                }
-            }
-        }
-    }
 }
 
 //#Preview {
