@@ -9,6 +9,7 @@ struct ContentView: View {
 //    @State private var message = ""
     @State private var isSignedIn = false
     @State private var userId: String?
+    @StateObject private var authManager = AuthManager.shared
 
     var body: some View {
         NavigationView {
