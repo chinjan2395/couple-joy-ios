@@ -10,41 +10,31 @@ import FirebaseFirestore
 
 struct MessageBubbleView: View {
     let message: Message
-    let isFromPartner: Bool
+    let partnerInitial: String
+    let currentTime: Date
 
     var body: some View {
-        HStack(alignment: .bottom, spacing: 10) {
-            if isFromPartner {
-                // Partner Initial Circle
-                Text(String("A").uppercased())
-//                Text(String(message.senderUID.prefix(1)).uppercased())
+        HStack(spacing: 10) {
+            Circle()
+                .fill(Color.pink)
+                .frame(width: 36, height: 36)
+                .overlay(
+                    Text(partnerInitial.uppercased())
+                        .foregroundColor(.white)
+                        .font(.headline)
+                )
+
+            VStack(alignment: .leading, spacing: 4) {
+                Text(message.message)
+                    .font(.body)
+
+                Text(timeAgo(from: message.timestamp, to: currentTime))
                     .font(.caption)
-                    .fontWeight(.bold)
-                    .foregroundColor(.white)
-                    .frame(width: 30, height: 30)
-                    .background(Color.pink)
-                    .clipShape(Circle())
-            }
-
-            VStack(alignment: isFromPartner ? .leading : .trailing, spacing: 4) {
-                Text(message.text)
-                    .padding(10)
-                    .background(isFromPartner ? Color.gray.opacity(0.2) : Color.blue.opacity(0.7))
-                    .foregroundColor(isFromPartner ? .black : .white)
-                    .cornerRadius(12)
-
-                if let date = message.timestamp as Date?{
-                    Text(timeAgo(from: date))
-                        .font(.caption2)
-                        .foregroundColor(.gray)
-                }
-            }
-
-            if !isFromPartner {
-                Spacer(minLength: 30)
+                    .foregroundColor(.gray)
             }
         }
-        .frame(maxWidth: .infinity, alignment: isFromPartner ? .leading : .trailing)
+        .padding()
+//        .frame(maxWidth: .infinity, alignment: isFromPartner ? .leading : .trailing)
         .padding(.horizontal)
         .padding(.top, 4)
     }

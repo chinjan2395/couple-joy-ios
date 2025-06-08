@@ -5,132 +5,170 @@
 //  Created by Chinjan Patel on 10/05/25.
 //  Messaging interface (chat)
 
-import SwiftUI
 import Firebase
+import FirebaseAuth
+import SwiftUI
 
 struct MessageView: View {
     let coupleId: String
-    let partnerRole: String
+    let partnerRole: PartnerRole
     let userId: String
 
-//    @State private var messageText = ""
-//    @State private var partnerMessage = ""
     @State private var listener: ListenerRegistration?
     @State private var lastMessage: Message?
     @State private var newMessage: String = ""
+    @State private var currentTime = Date()
+
+    @Environment(\.dismiss) private var dismiss
+
+    // These match the keys used in PartnerSetupView
+    @AppStorage("partnerRole") private var storedPartnerRole: String = ""
+    @AppStorage("partnerInitial") private var storedPartnerInitial: String = ""
+    @AppStorage("coupleId") private var storedCoupleId: String = ""
 
     var partnerDocument: String {
-        return partnerRole == "partnerA" ? "partnerB" : "partnerA"
+        return partnerRole.opposite.rawValue
+    }
+
+    var ownerInitial: String {
+        return partnerRole.owner.shortLabel
+    }
+
+    var partnerInitial: String {
+        return partnerRole.opposite.shortLabel
     }
 
     var body: some View {
-            VStack(spacing: 16) {
-                if let message = lastMessage {
-                    HStack(spacing: 10) {
-                        Circle()
-                            .fill(Color.pink)
-                            .frame(width: 36, height: 36)
-                            .overlay(
-//                                Text(message.senderInitial)
-                                Text("A")
-                                    .foregroundColor(.white)
-                                    .font(.headline)
-                            )
+        VStack(spacing: 16) {
+            // Partner Avatar & Couple ID
+            VStack(spacing: 8) {
+                // Partner Initial Circle
+                Text(ownerInitial)
+                    .font(.system(size: 36, weight: .bold))
+                    .frame(width: 80, height: 80)
+                    .background(AppColors.accentPink)
+                    .clipShape(Circle())
+                    .foregroundColor(AppColors.white)
+                    .shadow(color: AppColors.accentPink.opacity(0.4), radius: 8)
 
-                        VStack(alignment: .leading, spacing: 4) {
-                            Text(message.text)
-                                .font(.body)
+                // Subtle Couple ID
+                Text("Couple ID: \(coupleId)")
+                    .font(AppFonts.subtitleFont())
+                    .foregroundColor(AppColors.textSecondary)
+            }
 
-                            Text(timeAgo(from: message.timestamp))
-                                .font(.caption)
-                                .foregroundColor(.gray)
-                        }
-                    }
+            // Last Message or Placeholder
+            if let message = lastMessage {
+                MessageBubbleView(
+                    message: message,
+                    partnerInitial: partnerInitial,
+                    currentTime: currentTime,
+                )
+            } else {
+                Text("No message yet")
+                    .foregroundColor(AppColors.textSecondary)
+            }
+
+            // Prompt
+            Text("Send a sweet message to your partner…")
+                .font(.body)
+                .foregroundColor(AppColors.textSecondary)
+
+            HStack {
+                TextField("Type something lovely...", text: $newMessage)
                     .padding()
-                } else {
-                    Text("No message yet")
-                        .foregroundColor(.gray)
-                }
+                    .background(AppColors.white)
+                    .cornerRadius(AppCorners.extraLarge)
+                    .overlay(
+                        RoundedRectangle(cornerRadius: AppCorners.extraLarge)
+                            .stroke(AppColors.accentPink, lineWidth: 2)
+                    )
+                    .foregroundColor(AppColors.textPrimary)
 
-                HStack {
-                    TextField("Type your message...", text: $newMessage)
-                        .textFieldStyle(RoundedBorderTextFieldStyle())
-                        .padding(.horizontal)
-
-                    Button(action: sendMessage) {
-                        Image(systemName: "paperplane.fill")
-                            .foregroundColor(.white)
-                            .padding()
-                            .background(Color.blue)
-                            .clipShape(Circle())
-                    }
+                Button(action: sendMessage) {
+                    Image(systemName: "paperplane.fill")
+                        .foregroundColor(.white)
+                        .padding()
+                        .background(
+                            newMessage.isEmpty
+                                ? AppColors.buttonDisabled
+                                : AppColors.accentPink
+                        )
+                        .clipShape(Circle())
                 }
-                .padding()
+                .disabled(newMessage.isEmpty)
             }
-            .onAppear {
-                listenForLastMessage()
-            }
-        }
+            .padding(.horizontal)
 
-//    func subscribeToPartnerMessage() {
-//        let db = Firestore.firestore()
-//        listener = db.collection("couples")
-//            .document(coupleId)
-//            .collection("roles")
-//            .document(partnerDocument)
-//            .addSnapshotListener { snapshot, error in
-//                if let data = snapshot?.data(), let msg = data["message"] as? String {
-//                    self.partnerMessage = msg
-//                }
-//            }
-//    }
-    
-    func listenForLastMessage() {
-            let db = Firestore.firestore()
-            db.collection("couples")
-                .document(coupleId)
-                .collection("roles")
-                .order(by: "timestamp", descending: true)
-                .limit(to: 1)
-                .addSnapshotListener { snapshot, error in
-                    if let error = error {
-                        print("Error listening: \(error.localizedDescription)")
-                        return
-                    }
+            Spacer()
 
-                    guard let document = snapshot?.documents.first else {
-                        self.lastMessage = nil
-                        return
-                    }
+            // Reset Setup
+            VStack {
+                Divider()
+                Text("Want to start fresh?")
+                    .font(.footnote)
+                    .foregroundColor(AppColors.textSecondary)
+                    .padding(.vertical, 8)
 
-                    self.lastMessage = try? document.data(as: Message.self)
+                Button(action: resetSetup) {
+                    Text("Reset Setup")
+                        .foregroundColor(AppColors.textPrimary)
+                        .fontWeight(.medium)
+                        .padding(.horizontal, AppSpacing.large)
+                        .padding(.vertical, 8)
+                        .overlay(
+                            RoundedRectangle(cornerRadius: AppCorners.large)
+                                .stroke(AppColors.accentPink, lineWidth: 2)
+                        )
                 }
+            }
+            .padding(.top, 4)
         }
+        .padding(.bottom)
+        .background(AppColors.background.ignoresSafeArea())
+        .onAppear {
+            Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { _ in
+                self.currentTime = Date()
+            }
+            listenForLastMessage(currentRole: partnerRole.rawValue)
+        }
+    }
+
+    func listenForLastMessage(currentRole: String) {
+        listener = FirestoreManager.shared.listenToPartnerMessage(
+            coupleId: coupleId,
+            currentRole: PartnerRole(rawValue: currentRole)!
+        ) { partnerMessage in
+            self.lastMessage = partnerMessage
+        }
+    }
 
     func sendMessage() {
-            guard !newMessage.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else { return }
+        guard
+            !newMessage.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+        else { return }
 
-            let db = Firestore.firestore()
-            let deviceName = UIDevice.current.name
-            let senderInitial = String(partnerRole.uppercased().prefix(1))
-            let message = Message(
-                text: newMessage,
-                timestamp: Date(),
-                uid: userId,
-                device: deviceName
-            )
-
-            do {
-                try db.collection("couples")
-                    .document(coupleId)
-                    .collection("roles")
-                    .document(partnerRole)
-                    .setData(from: message, merge: true)
-//                    .setData(data, merge: true, completion: completion)
-//                    .addDocument(from: message)
+        FirestoreManager.shared.sendMessage(
+            coupleId: coupleId,
+            role: partnerRole,
+            message: newMessage
+        ) { error in
+            if let error = error {
+                print("Failed to send message: \(error)")
+            } else {
                 newMessage = ""
-            } catch {
-                print("Error sending message: \(error.localizedDescription)")
             }
         }
+    }
+
+    private func resetSetup() {
+        // Clear stored data
+        storedPartnerRole = ""
+        storedPartnerInitial = ""
+        storedCoupleId = ""
+
+        try? Auth.auth().signOut()
+
+        dismiss()
+    }
 }
