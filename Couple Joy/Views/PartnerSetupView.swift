@@ -130,9 +130,11 @@ struct PartnerSetupView: View {
         .padding(.top, 32)
     }
 
+    // MARK: - Continue Button Logic
     func continueSetup() {
-        coupleId = tempCoupleId
-        guard let role = PartnerRole(rawValue: roleSelection) else {
+        coupleId = tempCoupleId.trimmingCharacters(in: .whitespaces)
+
+        guard PartnerRole(rawValue: roleSelection) != nil else {
             errorMessage = "Invalid role selection."
             showingError = true
             return
