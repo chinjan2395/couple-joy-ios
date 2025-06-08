@@ -77,16 +77,16 @@ struct PartnerSetupView: View {
             roleSelection = selectedRole
             
             AuthManager.shared.requireAuth { result in
-                    DispatchQueue.main.async {
-                        checkingAuth = false
-                        switch result {
-                        case .success:
-                            isAuthenticated = true
-                        case .failure:
-                            isAuthenticated = false
-                        }
+                DispatchQueue.main.async {
+                    checkingAuth = false
+                    switch result {
+                    case .success:
+                        isAuthenticated = true
+                    case .failure:
+                        isAuthenticated = false
                     }
                 }
+            }
         }
     }
 
