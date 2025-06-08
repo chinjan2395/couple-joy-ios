@@ -101,7 +101,8 @@ struct PartnerSetupView: View {
             TextField("Enter Couple ID", text: $tempCoupleId)
                 .textFieldStyle(RoundedBorderTextFieldStyle())
                 .autocapitalization(.none)
-                .textInputAutocapitalization(.never) // Recommended for iOS 15+
+                .textInputAutocapitalization(.never)
+                .disableAutocorrection(true)
                 .padding(.horizontal)
 
             Picker("Select Role", selection: $roleSelection) {
@@ -117,13 +118,16 @@ struct PartnerSetupView: View {
                 Button("Continue") {
                     continueSetup()
                 }
-                .disabled(tempCoupleId.isEmpty || roleSelection.isEmpty)
+                .disabled(tempCoupleId.trimmingCharacters(in: .whitespaces).isEmpty || roleSelection.isEmpty)
                 .padding()
+                .frame(maxWidth: .infinity)
                 .background(AppColors.accentPink)
                 .foregroundColor(.white)
                 .cornerRadius(AppCorners.medium)
+                .padding(.horizontal)
             }
         }
+        .padding(.top, 32)
     }
 
     func continueSetup() {
