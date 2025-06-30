@@ -4,9 +4,7 @@
 //
 //  Created by Chinjan Patel on 10/05/25.
 //
-
 import SwiftUI
-import FirebaseFirestore
 
 struct MessageBubbleView: View {
     let message: Message
@@ -34,7 +32,7 @@ struct MessageBubbleView: View {
             }
         }
         .padding()
-//        .frame(maxWidth: .infinity, alignment: isFromPartner ? .leading : .trailing)
+        //        .frame(maxWidth: .infinity, alignment: isFromPartner ? .leading : .trailing)
         .padding(.horizontal)
         .padding(.top, 4)
     }
