@@ -35,11 +35,15 @@ class AuthManager: ObservableObject {
     
     @Published var isSignedIn = false
     @Published var isLoading = true
+    @Published var isSetupComplete = false
+    @Published var isCheckingSetup = false
 
     private var authListener: AuthStateDidChangeListenerHandle?
     
     private init() {
         setupAuthListener()
+        checkSetupCompletion()
+        print("Failed to AuthManager:init \(self.isSignedIn)")
     }
 
     var isAuthenticated: Bool {
@@ -54,6 +58,28 @@ class AuthManager: ObservableObject {
             Auth.auth().currentUser
     }
     
+    func checkSetupCompletion() {
+        guard let uid = currentUserID,
+            let coupleId = UserDefaults.standard.string(forKey: "coupleId")
+        else {
+            isSetupComplete = false
+            isCheckingSetup = false
+            return
+        }
+
+        isCheckingSetup = true
+
+        FirestoreManager.shared.checkSetupCompletion(
+            coupleId: coupleId,
+            uid: uid
+        ) { [weak self] isComplete in
+            DispatchQueue.main.async {
+                self?.isSetupComplete = isComplete
+                self?.isCheckingSetup = false  // Finished checking
+            }
+        }
+    }
+    
     func setupAuthListener() {
         authListener = Auth.auth().addStateDidChangeListener { [weak self] _, user in
             DispatchQueue.main.async {
@@ -65,8 +91,8 @@ class AuthManager: ObservableObject {
 
     func signInIfNeeded() {
         if let user = Auth.auth().currentUser {
-            isSignedIn = true
-            isLoading = false
+            self.isSignedIn = true
+            self.isLoading = false
         } else {
             isLoading = true
             signInWithGoogle { error in
