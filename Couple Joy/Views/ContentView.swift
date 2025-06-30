@@ -4,9 +4,9 @@ import FirebaseAuth
 import FirebaseFirestore
 import GoogleSignIn
 import GoogleSignInSwift
+import SwiftUI
 
 struct ContentView: View {
-//    @State private var message = ""
     @State private var isSignedIn = false
     @State private var userId: String?
     @AppStorage("coupleId") private var storedCoupleId: String = ""
@@ -15,7 +15,7 @@ struct ContentView: View {
 
     var body: some View {
         VStack(spacing: 20) {
-            if authManager.isLoading {
+            if authManager.isLoading || authManager.isCheckingSetup {
                 ProgressView("Loading...")
             } else if authManager.isSignedIn {
                 if authManager.isSetupComplete && !storedCoupleId.isEmpty {
@@ -42,11 +42,11 @@ struct ContentView: View {
                     }
                         }
             }
+        }.onAppear {
+            if authManager.isSignedIn {
+                authManager.checkSetupCompletion()
+            }
         }
-        // Auth listener should only be set up once
-//        .onAppear {
-//            authManager.setupAuthListener()
-//        }
     }
 
     func handleSignInButton() {
