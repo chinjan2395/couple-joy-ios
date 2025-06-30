@@ -16,6 +16,27 @@ class FirestoreManager {
     let device = UIDevice.current.name
 
     private init() {}
+    
+    func checkSetupCompletion(coupleId: String, uid: String, completion: @escaping (Bool) -> Void) {
+            guard !coupleId.isEmpty else {
+                completion(false)
+                return
+            }
+            
+            // Check both partner roles to see if this user exists in either
+            let partnerARef = partnerDoc(coupleId: coupleId, role: .partnerA)
+            let partnerBRef = partnerDoc(coupleId: coupleId, role: .partnerB)
+            
+            partnerARef.getDocument { (documentA, error) in
+                partnerBRef.getDocument { (documentB, error) in
+                    let uidA = documentA?.data()?["uid"] as? String
+                    let uidB = documentB?.data()?["uid"] as? String
+                    
+                    // Setup is complete if this user is in either role
+                    completion(uidA == uid || uidB == uid)
+                }
+            }
+        }
 
     // MARK: - Partner Setup
     func savePartnerInfo(
