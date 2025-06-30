@@ -167,7 +167,16 @@ struct PartnerSetupView: View {
                                     "Internal error. Please try again later."
                                 showingError = true
                             } else {
+                                // Save to UserDefaults
+                                UserDefaults.standard.set(coupleId, forKey: "coupleId")
+                                UserDefaults.standard.set(roleSelection, forKey: "partnerRole")
+                                
+                                // Refresh setup status
+                                AuthManager.shared.checkSetupCompletion()
+                                
                                 selectedRole = roleSelection
+                                // Mark setup as complete
+//                                AuthManager.shared.isSetupComplete = true
                                 showMessageScreen = true
                             }
                         }
