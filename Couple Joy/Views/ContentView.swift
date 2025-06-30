@@ -1,4 +1,3 @@
-import SwiftUI
 import Firebase
 import FirebaseAuth
 import FirebaseFirestore
@@ -29,7 +28,6 @@ struct ContentView: View {
                 }
             } else {
                 VStack {
-//                    Text(AuthError.notAuthenticated.localizedDescription)
                     Button(action: handleSignInButton) {
                         HStack {
                             Image(systemName: "person.crop.circle.badge.checkmark")
@@ -40,7 +38,7 @@ struct ContentView: View {
                         .foregroundColor(.white)
                         .cornerRadius(10)
                     }
-                        }
+                }
             }
         }.onAppear {
             if authManager.isSignedIn {
