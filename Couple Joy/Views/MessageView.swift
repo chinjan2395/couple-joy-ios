@@ -166,6 +166,9 @@ struct MessageView: View {
         storedPartnerRole = ""
         storedPartnerInitial = ""
         storedCoupleId = ""
+        
+        // Mark setup as incomplete
+        AuthManager.shared.isSetupComplete = false
 
         try? Auth.auth().signOut()
 
