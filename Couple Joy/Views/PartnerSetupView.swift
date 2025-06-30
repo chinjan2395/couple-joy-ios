@@ -45,7 +45,8 @@ struct PartnerSetupView: View {
                             if error == nil {
                                 isAuthenticated = true
                             } else {
-                                errorMessage = "Sign-in failed. Please try again."
+                                errorMessage =
+                                    "Sign-in failed. Please try again."
                                 showingError = true
                             }
                         }
@@ -68,14 +69,14 @@ struct PartnerSetupView: View {
             )
         }
         .alert("Error", isPresented: $showingError) {
-            Button("OK", role: .cancel) { }
+            Button("OK", role: .cancel) {}
         } message: {
             Text(errorMessage)
         }
         .onAppear {
             tempCoupleId = coupleId
             roleSelection = selectedRole
-            
+
             AuthManager.shared.requireAuth { result in
                 DispatchQueue.main.async {
                     checkingAuth = false
@@ -118,7 +119,10 @@ struct PartnerSetupView: View {
                 Button("Continue") {
                     continueSetup()
                 }
-                .disabled(tempCoupleId.trimmingCharacters(in: .whitespaces).isEmpty || roleSelection.isEmpty)
+                .disabled(
+                    tempCoupleId.trimmingCharacters(in: .whitespaces).isEmpty
+                        || roleSelection.isEmpty
+                )
                 .padding()
                 .frame(maxWidth: .infinity)
                 .background(AppColors.accentPink)
@@ -156,8 +160,11 @@ struct PartnerSetupView: View {
                         ) { error in
                             isSaving = false
                             if let error = error {
-                                print("Error saving partner info: \(error.localizedDescription)")
-                                errorMessage = "Internal error. Please try again later."
+                                print(
+                                    "Error saving partner info: \(error.localizedDescription)"
+                                )
+                                errorMessage =
+                                    "Internal error. Please try again later."
                                 showingError = true
                             } else {
                                 selectedRole = roleSelection
@@ -166,10 +173,11 @@ struct PartnerSetupView: View {
                         }
                     } else {
                         isSaving = false
-                        errorMessage = "This role is already selected by your partner. Please choose the other one."
+                        errorMessage =
+                            "This role is already selected by your partner. Please choose the other one."
                         showingError = true
                     }
-                    
+
                 case .failure(let error):
                     isSaving = false
                     self.errorMessage = error.localizedDescription
