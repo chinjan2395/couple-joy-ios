@@ -9,6 +9,8 @@ struct ContentView: View {
 //    @State private var message = ""
     @State private var isSignedIn = false
     @State private var userId: String?
+    @AppStorage("coupleId") private var storedCoupleId: String = ""
+    
     @StateObject private var authManager = AuthManager.shared
 
     var body: some View {
@@ -16,7 +18,15 @@ struct ContentView: View {
             if authManager.isLoading {
                 ProgressView("Loading...")
             } else if authManager.isSignedIn {
-                PartnerSetupView(userId: userId ?? "")
+                if authManager.isSetupComplete && !storedCoupleId.isEmpty {
+                    MessageView(
+                        coupleId: storedCoupleId,
+                        partnerRole: PartnerRole(rawValue: UserDefaults.standard.string(forKey: "partnerRole") ?? "") ?? .partnerA,
+                        userId: authManager.currentUserID ?? ""
+                    )
+                } else {
+                    PartnerSetupView(userId: authManager.currentUserID ?? "")
+                }
             } else {
                 VStack {
 //                    Text(AuthError.notAuthenticated.localizedDescription)
