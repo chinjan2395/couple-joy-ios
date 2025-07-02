@@ -35,11 +35,14 @@ struct PartnerSetupView: View {
         VStack(spacing: 20) {
             if checkingAuth {
                 ProgressView("Checking authentication...")
+                    .foregroundColor(.white)
             } else if !isAuthenticated {
                 VStack(spacing: 20) {
                     Text("You’re signed out")
                         .font(.title2)
                         .bold()
+                        .foregroundColor(.white)
+
                     Button("Sign In Again") {
                         AuthManager.shared.signInWithGoogle { error in
                             if error == nil {
