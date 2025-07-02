@@ -96,8 +96,48 @@ struct PartnerSetupView: View {
     func mainPartnerSetupView() -> some View {
         VStack(spacing: 24) {
             Text("Setup Your Role")
-                .font(.title)
-                .bold()
+                    .font(.largeTitle)
+                    .bold()
+                    .multilineTextAlignment(.center)
+
+                Text("Select your role so we can pair you with your partner.")
+                    .font(.subheadline)
+                    .multilineTextAlignment(.center)
+                    .foregroundColor(.gray)
+                    .padding(.horizontal)
+                
+                HStack(spacing: 24) {
+                    ForEach(["partnerA", "partnerB"], id: \.self) { role in
+                        let isSelected = roleSelection == role
+
+                        VStack(spacing: 8) {
+                            Image(systemName: role == "partnerA" ? "person.fill" : "person.fill.viewfinder")
+                                .resizable()
+                                .scaledToFit()
+                                .frame(height: 60)
+                                .foregroundColor(isSelected ? .white : .gray)
+
+                            Text(role == "partnerA" ? "Partner A" : "Partner B")
+                                .font(.headline)
+                                .foregroundColor(isSelected ? .white : .primary)
+                        }
+                        .frame(maxWidth: .infinity)
+                        .padding()
+                        .background(
+                            RoundedRectangle(cornerRadius: 20)
+                                .fill(isSelected ? AppColors.accentPink : Color(.systemGray6))
+                                .shadow(color: isSelected ? .pink.opacity(0.3) : .clear,
+                                        radius: isSelected ? 10 : 0)
+                        )
+                        .scaleEffect(isSelected ? 1.05 : 1.0)
+                        .onTapGesture {
+                            withAnimation(.spring(response: 0.3, dampingFraction: 0.6)) {
+                                roleSelection = role
+                            }
+                        }
+                    }
+                }
+                .padding(.horizontal)
 
             TextField("Enter Couple ID", text: $tempCoupleId)
                 .textFieldStyle(RoundedBorderTextFieldStyle())
