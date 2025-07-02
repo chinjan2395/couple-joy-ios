@@ -178,7 +178,33 @@ struct PartnerSetupView: View {
             .padding()
         }
     
-    
+    // MARK: - Role Card
+    func roleCard(title: String, tag: String, color: Color) -> some View {
+        Button(action: {
+            roleSelection = tag
+        }) {
+            VStack {
+                Image(systemName: tag == "partnerA" ? "person.fill" : "person.fill.viewfinder")
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 80, height: 80)
+                    .padding()
+                    .background(color.opacity(0.2))
+                    .clipShape(Circle())
+                Text(title)
+                    .font(.headline)
+                    .padding(.top, 4)
+            }
+            .padding()
+            .background(roleSelection == tag ? color.opacity(0.3) : Color.gray.opacity(0.1))
+            .cornerRadius(20)
+            .overlay(
+                RoundedRectangle(cornerRadius: 20)
+                    .stroke(roleSelection == tag ? color : .clear, lineWidth: 2)
+            )
+        }
+        .buttonStyle(PlainButtonStyle())
+    }
 
     // MARK: - Continue Button Logic
     func continueSetup() {
