@@ -32,7 +32,17 @@ struct ContentView: View {
                         .transition(.move(edge: .bottom).combined(with: .opacity))
                 }
             } else {
-                VStack {
+                VStack(spacing: 32) {
+                    VStack(spacing: 8) {
+                        Text("Welcome to")
+                            .font(.title2)
+                            .foregroundColor(.white.opacity(0.8))
+
+                        Text("CoupleJoy")
+                            .font(.system(size: 40, weight: .bold, design: .rounded))
+                            .foregroundColor(.white)
+                    }
+
                     Button(action: handleSignInButton) {
                         HStack {
                             Image(systemName: "person.crop.circle.badge.checkmark")
