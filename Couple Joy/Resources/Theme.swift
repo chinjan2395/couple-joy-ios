@@ -62,3 +62,23 @@ enum AppShadows {
     static let medium = Color.black.opacity(0.1)
     static let heavy = Color.black.opacity(0.2)
 }
+
+extension Color {
+    static func lerp(from: Color, to: Color, fraction: CGFloat) -> Color {
+        let f = UIColor(from)
+        let t = UIColor(to)
+
+        var fr: CGFloat = 0, fg: CGFloat = 0, fb: CGFloat = 0, fa: CGFloat = 0
+        var tr: CGFloat = 0, tg: CGFloat = 0, tb: CGFloat = 0, ta: CGFloat = 0
+
+        f.getRed(&fr, green: &fg, blue: &fb, alpha: &fa)
+        t.getRed(&tr, green: &tg, blue: &tb, alpha: &ta)
+
+        return Color(
+            red: Double(fr + (tr - fr) * fraction),
+            green: Double(fg + (tg - fg) * fraction),
+            blue: Double(fb + (tb - fb) * fraction),
+            opacity: Double(fa + (ta - fa) * fraction)
+        )
+    }
+}
