@@ -44,18 +44,29 @@ struct ContentView: View {
                     }
 
                     Button(action: handleSignInButton) {
-                        HStack {
-                            Image(systemName: "person.crop.circle.badge.checkmark")
+                        HStack(spacing: 12) {
+                            Image(systemName: "person.crop.circle.fill.badge.checkmark")
+                                .imageScale(.large)
                             Text("Sign in with Google")
+                                .fontWeight(.semibold)
                         }
-                        .frame(width: 220, height: 50)
-                        .background(Color.blue)
+                        .frame(minWidth: 240, minHeight: 50)
+                        .background(.ultraThinMaterial, in: Capsule())
+                        .overlay(
+                            Capsule().strokeBorder(Color.white.opacity(0.25), lineWidth: 1)
+                        )
                         .foregroundColor(.white)
-                        .cornerRadius(10)
+                        .shadow(radius: 6)
                     }
+                    .padding(.top, 8)
                 }
+                .padding()
+                .transition(.opacity.combined(with: .scale))
             }
-        }.onAppear {
+            }
+        .padding()
+        .animation(.easeInOut(duration: 0.3), value: authManager.isSignedIn)
+        .onAppear {
             if authManager.isSignedIn {
                 authManager.checkSetupCompletion()
             }
