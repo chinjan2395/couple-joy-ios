@@ -13,9 +13,12 @@ struct ContentView: View {
     @StateObject private var authManager = AuthManager.shared
 
     var body: some View {
-        VStack(spacing: 20) {
+        ZStack {
             if authManager.isLoading || authManager.isCheckingSetup {
                 ProgressView("Loading...")
+                    .progressViewStyle(CircularProgressViewStyle(tint: .white))
+                    .scaleEffect(1.2)
+                    .transition(.opacity)
             } else if authManager.isSignedIn {
                 if authManager.isSetupComplete && !storedCoupleId.isEmpty {
                     MessageView(
@@ -23,8 +26,10 @@ struct ContentView: View {
                         partnerRole: PartnerRole(rawValue: UserDefaults.standard.string(forKey: "partnerRole") ?? "") ?? .partnerA,
                         userId: authManager.currentUserID ?? ""
                     )
+                    .transition(.opacity)
                 } else {
                     PartnerSetupView(userId: authManager.currentUserID ?? "")
+                        .transition(.move(edge: .bottom).combined(with: .opacity))
                 }
             } else {
                 VStack {
