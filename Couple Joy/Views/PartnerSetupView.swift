@@ -155,26 +155,30 @@ struct PartnerSetupView: View {
                     .padding(.top, 6)
                 }
 
-            if isSaving {
-                ProgressView()
-            } else {
-                Button("Continue") {
-                    continueSetup()
+                if isSaving {
+                    ProgressView()
+                } else {
+                    Button(action: continueSetup) {
+                        HStack {
+                            Spacer()
+                            Text("Next")
+                                .bold()
+                                .foregroundColor(.white)
+                            Image(systemName: "arrow.right")
+                                .foregroundColor(.white)
+                            Spacer()
+                        }
+                        .padding()
+                        .background(roleSelection.isEmpty ? Color.gray : AppColors.accentPink)
+                        .cornerRadius(12)
+                    }
+                    .disabled(roleSelection.isEmpty)
                 }
-                .disabled(
-                    tempCoupleId.trimmingCharacters(in: .whitespaces).isEmpty
-                        || roleSelection.isEmpty
-                )
-                .padding()
-                .frame(maxWidth: .infinity)
-                .background(AppColors.accentPink)
-                .foregroundColor(.white)
-                .cornerRadius(AppCorners.medium)
-                .padding(.horizontal)
             }
+            .padding()
         }
-        .padding(.top, 32)
-    }
+    
+    
 
     // MARK: - Continue Button Logic
     func continueSetup() {
