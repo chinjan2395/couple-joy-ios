@@ -139,19 +139,21 @@ struct PartnerSetupView: View {
                 }
                 .padding(.horizontal)
 
-            TextField("Enter Couple ID", text: $tempCoupleId)
-                .textFieldStyle(RoundedBorderTextFieldStyle())
-                .autocapitalization(.none)
-                .textInputAutocapitalization(.never)
-                .disableAutocorrection(true)
-                .padding(.horizontal)
+                VStack(spacing: 12) {
+                    Text("Your Code: \(tempCoupleId)")
+                        .font(.subheadline)
+                        .foregroundColor(.gray)
 
-            Picker("Select Role", selection: $roleSelection) {
-                Text("Partner A").tag("partnerA")
-                Text("Partner B").tag("partnerB")
-            }
-            .pickerStyle(SegmentedPickerStyle())
-            .padding(.horizontal)
+                    
+                    TextField("Enter Couple ID", text: Binding(
+                        get: { String(tempCoupleId) },
+                        set: { tempCoupleId = $0.uppercased() }
+                    ))
+                    .textFieldStyle(RoundedBorderTextFieldStyle())
+                    .textInputAutocapitalization(.never)
+                    .disableAutocorrection(true)
+                    .padding(.top, 6)
+                }
 
             if isSaving {
                 ProgressView()
