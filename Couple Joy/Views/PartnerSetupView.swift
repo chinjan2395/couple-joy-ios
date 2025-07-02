@@ -99,112 +99,111 @@ struct PartnerSetupView: View {
     func mainPartnerSetupView() -> some View {
         VStack(spacing: 24) {
             Text("Setup Your Role")
-                    .font(.largeTitle)
-                    .bold()
-                    .multilineTextAlignment(.center)
+                .font(.largeTitle)
+                .bold()
+                .foregroundColor(.white)
+                .multilineTextAlignment(.center)
 
-                Text("Select your role so we can pair you with your partner.")
-                    .font(.subheadline)
-                    .multilineTextAlignment(.center)
-                    .foregroundColor(.gray)
-                    .padding(.horizontal)
-                
-                HStack(spacing: 24) {
-                    ForEach(["partnerA", "partnerB"], id: \.self) { role in
-                        let isSelected = roleSelection == role
-
-                        VStack(spacing: 8) {
-                            Image(systemName: role == "partnerA" ? "person.fill" : "person.fill.viewfinder")
-                                .resizable()
-                                .scaledToFit()
-                                .frame(height: 60)
-                                .foregroundColor(isSelected ? .white : .gray)
-
-                            Text(role == "partnerA" ? "Partner A" : "Partner B")
-                                .font(.headline)
-                                .foregroundColor(isSelected ? .white : .primary)
-                        }
-                        .frame(maxWidth: .infinity)
-                        .padding()
-                        .background(
-                            RoundedRectangle(cornerRadius: 20)
-                                .fill(isSelected ? AppColors.accentPink : Color(.systemGray6))
-                                .shadow(color: isSelected ? .pink.opacity(0.3) : .clear,
-                                        radius: isSelected ? 10 : 0)
-                        )
-                        .scaleEffect(isSelected ? 1.05 : 1.0)
-                        .onTapGesture {
-                            withAnimation(.spring(response: 0.3, dampingFraction: 0.6)) {
-                                roleSelection = role
-                            }
-                        }
-                    }
-                }
+            Text("Select your role so we can pair you with your partner.")
+                .font(.subheadline)
+                .foregroundColor(.white.opacity(0.6))
+                .multilineTextAlignment(.center)
                 .padding(.horizontal)
 
-                VStack(spacing: 12) {
-                    Text("Your Code: \(tempCoupleId)")
-                        .font(.subheadline)
-                        .foregroundColor(.gray)
-
-                    
-                    TextField("Enter Couple ID", text: Binding(
-                        get: { String(tempCoupleId) },
-                        set: { tempCoupleId = $0.uppercased() }
-                    ))
-                    .textFieldStyle(RoundedBorderTextFieldStyle())
-                    .textInputAutocapitalization(.never)
-                    .disableAutocorrection(true)
-                    .padding(.top, 6)
-                }
-
-                if isSaving {
-                    ProgressView()
-                } else {
-                    Button(action: continueSetup) {
-                        HStack {
-                            Spacer()
-                            Text("Next")
-                                .bold()
-                                .foregroundColor(.white)
-                            Image(systemName: "arrow.right")
-                                .foregroundColor(.white)
-                            Spacer()
-                        }
-                        .padding()
-                        .background(roleSelection.isEmpty ? Color.gray : AppColors.accentPink)
-                        .cornerRadius(12)
-                    }
-                    .disabled(roleSelection.isEmpty)
-                }
+            HStack(spacing: 24) {
+                roleCard(title: "Partner A", tag: "partnerA", color: AppColors.accentLight)
+                roleCard(title: "Partner B", tag: "partnerB", color: AppColors.accentPink)
             }
-            .padding()
+            .padding(.horizontal)
+
+            VStack(spacing: 12) {
+                Text("Your Code: \(tempCoupleId)")
+                    .font(.subheadline)
+                    .foregroundColor(.white.opacity(0.6))
+
+                TextField("Enter Couple ID", text: Binding(
+                    get: { String(tempCoupleId) },
+                    set: { tempCoupleId = $0.uppercased() }
+                ))
+                .padding()
+                .background(Color.white.opacity(0.1))
+                .cornerRadius(12)
+                .overlay(
+                    RoundedRectangle(cornerRadius: 12)
+                        .stroke(Color.white.opacity(0.3), lineWidth: 1)
+                )
+                .foregroundColor(.white)
+                .textInputAutocapitalization(.never)
+                .disableAutocorrection(true)
+                .padding(.top, 6)
+            }
+
+            if isSaving {
+                ProgressView()
+                    .progressViewStyle(CircularProgressViewStyle(tint: .white))
+            } else {
+                Button(action: continueSetup) {
+                    HStack {
+                        Spacer()
+                        Text("Next")
+                            .bold()
+                            .foregroundColor(.white)
+                        Image(systemName: "arrow.right")
+                            .foregroundColor(.white)
+                        Spacer()
+                    }
+                    .padding()
+                    .background(
+                        LinearGradient(
+                            colors: roleSelection.isEmpty
+                                ? [Color.gray]
+                                : [AppColors.accentPink, .purple],
+                            startPoint: .leading,
+                            endPoint: .trailing
+                        )
+                    )
+                    .cornerRadius(12)
+                    .shadow(
+                        color: roleSelection.isEmpty ? .clear : .pink.opacity(0.4),
+                        radius: 8, y: 4
+                    )
+                    .scaleEffect(roleSelection.isEmpty ? 1.0 : 1.02)
+                }
+                .disabled(roleSelection.isEmpty)
+            }
         }
+        .padding()
+        .transition(.opacity)
+    }
     
     // MARK: - Role Card
     func roleCard(title: String, tag: String, color: Color) -> some View {
-        Button(action: {
-            roleSelection = tag
+        let isSelected = roleSelection == tag
+
+        return Button(action: {
+            withAnimation(.spring(response: 0.3, dampingFraction: 0.6)) {
+                roleSelection = tag
+            }
         }) {
-            VStack {
+            VStack(spacing: 8) {
                 Image(systemName: tag == "partnerA" ? "person.fill" : "person.fill.viewfinder")
                     .resizable()
                     .scaledToFit()
-                    .frame(width: 80, height: 80)
-                    .padding()
-                    .background(color.opacity(0.2))
-                    .clipShape(Circle())
+                    .frame(height: 60)
+                    .foregroundColor(isSelected ? .white : .white.opacity(0.6))
+
                 Text(title)
                     .font(.headline)
-                    .padding(.top, 4)
+                    .foregroundColor(isSelected ? .white : .white.opacity(0.8))
             }
             .padding()
-            .background(roleSelection == tag ? color.opacity(0.3) : Color.gray.opacity(0.1))
-            .cornerRadius(20)
-            .overlay(
+            .frame(maxWidth: .infinity)
+            .background(
                 RoundedRectangle(cornerRadius: 20)
-                    .stroke(roleSelection == tag ? color : .clear, lineWidth: 2)
+                    .fill(isSelected ? color : Color.white.opacity(0.05))
+                    .shadow(color: isSelected ? color.opacity(0.4) : .clear, radius: 8)
             )
+            .scaleEffect(isSelected ? 1.05 : 1.0)
         }
         .buttonStyle(PlainButtonStyle())
     }
