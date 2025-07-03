@@ -79,6 +79,9 @@ struct MessageView: View {
             } else {
                 Text("No message yet")
                     .foregroundColor(AppColors.textSecondary)
+                    .padding()
+                    .background(Color.white.opacity(0.1))
+                    .cornerRadius(AppCorners.medium)
             }
 
             // Prompt
@@ -86,16 +89,28 @@ struct MessageView: View {
                 .font(.body)
                 .foregroundColor(AppColors.white)
 
-            HStack {
-                TextField("Type something lovely...", text: $newMessage)
-                    .padding()
-                    .background(AppColors.white)
-                    .cornerRadius(AppCorners.extraLarge)
-                    .overlay(
-                        RoundedRectangle(cornerRadius: AppCorners.extraLarge)
-                            .stroke(AppColors.accentPink, lineWidth: 2)
-                    )
-                    .foregroundColor(AppColors.textPrimary)
+            ZStack {
+                // Floating Heart Animation
+                if showHeart {
+                    Image(systemName: "heart.fill")
+                        .font(.system(size: 30))
+                        .foregroundColor(AppColors.gradientPinkStart)
+                        .transition(.move(edge: .top).combined(with: .opacity))
+                        .scaleEffect(heartScale)
+                        .offset(y: 100)
+                }
+                
+                // Input Section
+                HStack {
+                   TextField("Message", text: $newMessage)
+                       .padding()
+                       .background(.ultraThinMaterial)
+                       .cornerRadius(AppCorners.extraLarge)
+                       .foregroundColor(AppColors.white)
+                       .overlay(
+                           RoundedRectangle(cornerRadius: AppCorners.extraLarge)
+                               .stroke(Color.clear, lineWidth: 0) // No border
+                       )
 
                     Button(action: {
                         sendMessage()
@@ -128,8 +143,9 @@ struct MessageView: View {
             Spacer()
 
             // Reset Setup
-            VStack {
+            VStack(spacing: 8) {
                 Divider()
+
                 Text("Want to start fresh?")
                     .font(.footnote)
                     .foregroundColor(AppColors.textSecondary)
@@ -159,7 +175,7 @@ struct MessageView: View {
         .padding(.bottom)
         .onAppear {
             Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { _ in
-                self.currentTime = Date()
+                currentTime = Date()
             }
             listenForLastMessage(currentRole: partnerRole.rawValue)
         }
