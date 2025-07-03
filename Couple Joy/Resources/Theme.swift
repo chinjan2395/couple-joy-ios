@@ -27,6 +27,11 @@ enum AppColors {
     static let textPrimary = Color.black
     static let textSecondary = Color.gray
     static let white = Color.white
+    
+    // Gradient Pink (used for animated backgrounds, buttons, etc.)
+    static let gradientPinkStart = Color(red: 1.0, green: 0.4, blue: 0.6)  // Soft neon pink (#FF6699)
+    static let gradientPinkEnd   = Color(red: 0.85, green: 0.3, blue: 0.95) // Purplish pink (#D94CF2)
+
 }
 
 enum AppFonts {
