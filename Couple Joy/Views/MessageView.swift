@@ -43,13 +43,22 @@ struct MessageView: View {
             // Partner Avatar & Couple ID
             VStack(spacing: 8) {
                 // Partner Initial Circle
-                Text(ownerInitial)
-                    .font(.system(size: 36, weight: .bold))
-                    .frame(width: 80, height: 80)
-                    .background(AppColors.accentPink)
-                    .clipShape(Circle())
-                    .foregroundColor(AppColors.white)
-                    .shadow(color: AppColors.accentPink.opacity(0.4), radius: 8)
+                ZStack {
+                    Circle()
+                        .fill(
+                            LinearGradient(
+                                gradient: Gradient(colors: [AppColors.gradientPinkStart, AppColors.gradientPinkEnd]),
+                                startPoint: .topLeading,
+                                endPoint: .bottomTrailing
+                            )
+                        )
+                        .frame(width: 80, height: 80)
+                        .shadow(color: AppColors.gradientPinkEnd.opacity(0.4), radius: 10)
+
+                    Text(ownerInitial)
+                        .font(.system(size: 36, weight: .bold))
+                        .foregroundColor(.white)
+                }
 
                 // Subtle Couple ID
                 Text("Couple ID: \(coupleId)")
@@ -72,7 +81,7 @@ struct MessageView: View {
             // Prompt
             Text("Send a sweet message to your partner…")
                 .font(.body)
-                .foregroundColor(AppColors.textSecondary)
+                .foregroundColor(AppColors.white)
 
             HStack {
                 TextField("Type something lovely...", text: $newMessage)
@@ -85,20 +94,33 @@ struct MessageView: View {
                     )
                     .foregroundColor(AppColors.textPrimary)
 
-                Button(action: sendMessage) {
-                    Image(systemName: "paperplane.fill")
-                        .foregroundColor(.white)
-                        .padding()
-                        .background(
-                            newMessage.isEmpty
+                    Button(action: {
+                        sendMessage()
+                        withAnimation(.easeOut(duration: 0.5)) {
+                            showHeart = true
+                            heartScale = 1.5
+                        }
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+                            withAnimation(.easeIn(duration: 0.3)) {
+                                showHeart = false
+                                heartScale = 0.8
+                            }
+                        }
+                    }) {
+                        Image(systemName: "paperplane.fill")
+                            .foregroundColor(.white)
+                            .padding()
+                            .background(
+                                newMessage.isEmpty
                                 ? AppColors.buttonDisabled
-                                : AppColors.accentPink
-                        )
-                        .clipShape(Circle())
+                                : AppColors.gradientPinkStart
+                            )
+                            .clipShape(Circle())
+                    }
+                    .disabled(newMessage.isEmpty)
                 }
-                .disabled(newMessage.isEmpty)
+                .padding(.horizontal)
             }
-            .padding(.horizontal)
 
             Spacer()
 
@@ -115,8 +137,8 @@ struct MessageView: View {
                         .foregroundColor(AppColors.textPrimary)
                         .fontWeight(.medium)
                         .padding(.horizontal, AppSpacing.large)
-                        .padding(.vertical, 8)
-                        .overlay(
+                        .padding(.vertical, 10)
+                        .background(
                             RoundedRectangle(cornerRadius: AppCorners.large)
                                 .stroke(AppColors.accentPink, lineWidth: 2)
                         )
@@ -125,7 +147,6 @@ struct MessageView: View {
             .padding(.top, 4)
         }
         .padding(.bottom)
-        .background(AppColors.background.ignoresSafeArea())
         .onAppear {
             Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { _ in
                 self.currentTime = Date()
