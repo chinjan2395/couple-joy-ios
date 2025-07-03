@@ -18,6 +18,9 @@ struct MessageView: View {
     @State private var lastMessage: Message?
     @State private var newMessage: String = ""
     @State private var currentTime = Date()
+    @State private var showHeart = false
+    @State private var heartScale: CGFloat = 0.8
+    @State private var showResetConfirmation = false
 
     @Environment(\.dismiss) private var dismiss
 
@@ -43,13 +46,22 @@ struct MessageView: View {
             // Partner Avatar & Couple ID
             VStack(spacing: 8) {
                 // Partner Initial Circle
-                Text(ownerInitial)
-                    .font(.system(size: 36, weight: .bold))
-                    .frame(width: 80, height: 80)
-                    .background(AppColors.accentPink)
-                    .clipShape(Circle())
-                    .foregroundColor(AppColors.white)
-                    .shadow(color: AppColors.accentPink.opacity(0.4), radius: 8)
+                ZStack {
+                    Circle()
+                        .fill(
+                            LinearGradient(
+                                gradient: Gradient(colors: [AppColors.gradientPinkStart, AppColors.gradientPinkEnd]),
+                                startPoint: .topLeading,
+                                endPoint: .bottomTrailing
+                            )
+                        )
+                        .frame(width: 80, height: 80)
+                        .shadow(color: AppColors.gradientPinkEnd.opacity(0.4), radius: 10)
+
+                    Text(ownerInitial)
+                        .font(.system(size: 36, weight: .bold))
+                        .foregroundColor(.white)
+                }
 
                 // Subtle Couple ID
                 Text("Couple ID: \(coupleId)")
@@ -67,68 +79,103 @@ struct MessageView: View {
             } else {
                 Text("No message yet")
                     .foregroundColor(AppColors.textSecondary)
+                    .padding()
+                    .background(Color.white.opacity(0.1))
+                    .cornerRadius(AppCorners.medium)
             }
 
             // Prompt
             Text("Send a sweet message to your partner…")
                 .font(.body)
-                .foregroundColor(AppColors.textSecondary)
+                .foregroundColor(AppColors.white)
 
-            HStack {
-                TextField("Type something lovely...", text: $newMessage)
-                    .padding()
-                    .background(AppColors.white)
-                    .cornerRadius(AppCorners.extraLarge)
-                    .overlay(
-                        RoundedRectangle(cornerRadius: AppCorners.extraLarge)
-                            .stroke(AppColors.accentPink, lineWidth: 2)
-                    )
-                    .foregroundColor(AppColors.textPrimary)
-
-                Button(action: sendMessage) {
-                    Image(systemName: "paperplane.fill")
-                        .foregroundColor(.white)
-                        .padding()
-                        .background(
-                            newMessage.isEmpty
-                                ? AppColors.buttonDisabled
-                                : AppColors.accentPink
-                        )
-                        .clipShape(Circle())
+            ZStack {
+                // Floating Heart Animation
+                if showHeart {
+                    Image(systemName: "heart.fill")
+                        .font(.system(size: 30))
+                        .foregroundColor(AppColors.gradientPinkStart)
+                        .transition(.move(edge: .top).combined(with: .opacity))
+                        .scaleEffect(heartScale)
+                        .offset(y: 100)
                 }
-                .disabled(newMessage.isEmpty)
+                
+                // Input Section
+                HStack {
+                   TextField("Message", text: $newMessage)
+                       .padding()
+                       .background(.ultraThinMaterial)
+                       .cornerRadius(AppCorners.extraLarge)
+                       .foregroundColor(AppColors.white)
+                       .overlay(
+                           RoundedRectangle(cornerRadius: AppCorners.extraLarge)
+                               .stroke(Color.clear, lineWidth: 0) // No border
+                       )
+
+                    Button(action: {
+                        sendMessage()
+                        withAnimation(.easeOut(duration: 0.5)) {
+                            showHeart = true
+                            heartScale = 1.5
+                        }
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+                            withAnimation(.easeIn(duration: 0.3)) {
+                                showHeart = false
+                                heartScale = 0.8
+                            }
+                        }
+                    }) {
+                        Image(systemName: "paperplane.fill")
+                            .foregroundColor(.white)
+                            .padding()
+                            .background(
+                                newMessage.isEmpty
+                                ? AppColors.buttonDisabled
+                                : AppColors.gradientPinkStart
+                            )
+                            .clipShape(Circle())
+                    }
+                    .disabled(newMessage.isEmpty)
+                }
+                .padding(.horizontal)
             }
-            .padding(.horizontal)
 
             Spacer()
 
             // Reset Setup
-            VStack {
+            VStack(spacing: 8) {
                 Divider()
+
                 Text("Want to start fresh?")
                     .font(.footnote)
                     .foregroundColor(AppColors.textSecondary)
-                    .padding(.vertical, 8)
 
-                Button(action: resetSetup) {
+                Button(action: {
+                    showResetConfirmation = true
+                }) {
                     Text("Reset Setup")
-                        .foregroundColor(AppColors.textPrimary)
                         .fontWeight(.medium)
+                        .foregroundColor(.white)
                         .padding(.horizontal, AppSpacing.large)
-                        .padding(.vertical, 8)
-                        .overlay(
+                        .padding(.vertical, 10)
+                        .background(
                             RoundedRectangle(cornerRadius: AppCorners.large)
-                                .stroke(AppColors.accentPink, lineWidth: 2)
+                                .stroke(AppColors.gradientPinkStart, lineWidth: 1.5)
                         )
                 }
+                .alert("Reset Setup?", isPresented: $showResetConfirmation) {
+                    Button("Reset", role: .destructive, action: resetSetup)
+                    Button("Cancel", role: .cancel) {}
+                } message: {
+                    Text("This will clear your couple setup and sign you out. Are you sure?")
+                }
             }
-            .padding(.top, 4)
+            .padding(.top, 12)
         }
         .padding(.bottom)
-        .background(AppColors.background.ignoresSafeArea())
         .onAppear {
             Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { _ in
-                self.currentTime = Date()
+                currentTime = Date()
             }
             listenForLastMessage(currentRole: partnerRole.rawValue)
         }
