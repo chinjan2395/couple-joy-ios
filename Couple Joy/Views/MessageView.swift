@@ -18,6 +18,9 @@ struct MessageView: View {
     @State private var lastMessage: Message?
     @State private var newMessage: String = ""
     @State private var currentTime = Date()
+    @State private var showHeart = false
+    @State private var heartScale: CGFloat = 0.8
+    @State private var showResetConfirmation = false
 
     @Environment(\.dismiss) private var dismiss
 
@@ -130,21 +133,28 @@ struct MessageView: View {
                 Text("Want to start fresh?")
                     .font(.footnote)
                     .foregroundColor(AppColors.textSecondary)
-                    .padding(.vertical, 8)
 
-                Button(action: resetSetup) {
+                Button(action: {
+                    showResetConfirmation = true
+                }) {
                     Text("Reset Setup")
-                        .foregroundColor(AppColors.textPrimary)
                         .fontWeight(.medium)
+                        .foregroundColor(.white)
                         .padding(.horizontal, AppSpacing.large)
                         .padding(.vertical, 10)
                         .background(
                             RoundedRectangle(cornerRadius: AppCorners.large)
-                                .stroke(AppColors.accentPink, lineWidth: 2)
+                                .stroke(AppColors.gradientPinkStart, lineWidth: 1.5)
                         )
                 }
+                .alert("Reset Setup?", isPresented: $showResetConfirmation) {
+                    Button("Reset", role: .destructive, action: resetSetup)
+                    Button("Cancel", role: .cancel) {}
+                } message: {
+                    Text("This will clear your couple setup and sign you out. Are you sure?")
+                }
             }
-            .padding(.top, 4)
+            .padding(.top, 12)
         }
         .padding(.bottom)
         .onAppear {
